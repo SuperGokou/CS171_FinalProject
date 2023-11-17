@@ -16,7 +16,7 @@ class MapVis {
 
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
             .attr("width", vis.width)
-            .attr("height", vis.height)
+            .attr("height", vis.height*2.5)
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
         // Initialize tooltip
@@ -26,7 +26,7 @@ class MapVis {
 
         vis.path = d3.geoPath();
 
-        vis.viewpoint = {'width': 975, 'height': 610};
+        vis.viewpoint = {'width': 975, 'height': 975};
         vis.zoom = vis.width / vis.viewpoint.width;
 
         vis.map = vis.svg.append("g")
@@ -45,7 +45,7 @@ class MapVis {
 
         vis.legend = vis.svg.append("g")
             .attr("class", "legendLinear")
-            .attr("transform", `translate(${vis.width/2},${vis.height *0.9})`);
+            .attr("transform", `translate(${vis.width/1.5},${vis.height*1.8})`);
 
         vis.legendScale = d3.scaleLinear()
             .range([0, vis.width/3]) ;
@@ -167,7 +167,6 @@ class MapVis {
         vis.states
             .attr("fill", d => {
                 let stateInfo = stateColorMap.get(d.properties.name);
-                console.log("=======>", d);
                 return stateInfo ? vis.colorScale(stateInfo.CaseSum) : "#FFF";
             })
             .attr('stroke-width', '1.5px')
