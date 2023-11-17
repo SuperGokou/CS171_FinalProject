@@ -22,6 +22,6 @@ function initMainPage(dataArray) {
     console.log(dataArray[0])
     // TODO - init map
     myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
-
+    myAgeBarVis = new ageRangeBarVis('ageRange',dataArray[1], "Victims Age Range");
 
 }
