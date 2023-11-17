@@ -1,10 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <title style="text-align: center; color: darkred">CS171 Final Project</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body style=" background: black; padding: 1vh 1vw 1vh 1vw">
 
+
+<div class="container-fluid" style="height: 100vh; width: 100vw; padding-top: 1vh; padding-left: 1vw; border-left: medium solid darkred">
+
+    <div class="row d-flex justify-content-center" style="height: 10vh;  background: darkred">
+        <div class="align-self-center">
+            <h1>US Fatal Police Shootings Tracking Dashboard</h1>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-center" style="height: 70vh; width: 100vw">
+        <div class="align-self-center" id="mapDiv" style=" margin-top: -12vh; height: 75%; width: 60%"></div>
+    </div>
+
+<!--    <div class="row" style=" padding-top: 1vh; width: 200vw; height: 200vh ">-->
+<!--    </div>-->
+</div>
+
+
+<!-- BOOTSTRAP -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+<!-- d3 -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://d3js.org/d3-array.v2.min.js"></script>
+<script src="https://d3js.org/d3-geo.v2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.13.0/d3-legend.js"></script>
+
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
+<script src="https://d3js.org/d3-geo.v1.min.js"></script>
+
+<!-- OWN JS -->
+<script src="js/mapVis.js"></script>
+<script src="js/main.js"></script>
+<script src="js/helpers.js"></script>
 </body>
 </html>
