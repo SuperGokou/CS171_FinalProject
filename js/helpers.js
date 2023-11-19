@@ -108,3 +108,13 @@ function switchView() {
     document.getElementById('switchView').innerHTML === 'map view' ? document.getElementById('switchView').innerHTML = 'table view' : document.getElementById('switchView').innerHTML = 'map view';
 }
 
+function getAgeGroup(age) {
+    // Convert age to number and calculate the group
+    let ageNum = parseInt(age);
+    let group = Math.floor(ageNum / 5) * 5;
+    return `${group}-${group + 4}`;
+}
+
+function getStartingAge(ageRange) {
+    return parseInt(ageRange.split('-')[0]);
+}
