@@ -21,7 +21,7 @@ function initMainPage(dataArray) {
 
     console.log(dataArray[0])
     // TODO - init map
-    myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
-
+    // myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
+    calendarVis = new CalendarVis('calendarDiv', dataArray[1]);
 
 }
