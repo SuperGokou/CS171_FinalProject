@@ -94,6 +94,17 @@ class CalendarVis {
             .attr("height", vis.dayWidth)
             .attr("fill", (d) => ( d == 0 ? 'white' : vis.colorScale(d)))
             .attr("rx", 5)
+
+        vis.svg.selectAll(".key-text")
+            .data(keyData)
+            .enter()
+            .append("text")
+            .attr("class", "key-text")
+            .attr("x", (d) => vis.getMonthXPos(d) + vis.weekWidth / 2 + vis.dayWidth / 2)
+            .attr("y", vis.height * 0.05 + vis.dayWidth / 1.4 )
+            .attr("text-anchor", "middle")
+            .attr("fill", (d) => d == 0 ? 'black' : 'white')
+            .text((d) => d)
     }
 
     drawDay() {
@@ -142,10 +153,14 @@ class CalendarVis {
                     .style('left', (event.pageX + 10) + 'px')
                     .style('top', (event.pageY - 28) + 'px')
                     .html(`${vis.formatDate(vis.currentDate)}<br>${shootingsToday.length} shootings`)
+
+                d3.select(this).attr('stroke', 'white')
             })
             .on('mouseout', function (event, d) {
                 vis.tooltip
                     .style('opacity', 0)
+
+                d3.select(this).attr('stroke', 'black')
             })
     }
 
