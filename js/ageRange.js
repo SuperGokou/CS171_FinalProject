@@ -9,10 +9,12 @@ class AgeRangeVis {
     initVis() {
         let vis = this;
 
+        // Set dimensions and margins for the graph
         vis.margin = {top: 10, right: 30, bottom: 40, left: 50};
         vis.width = 460 - vis.margin.left - vis.margin.right;
         vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
+        // Append SVG object to the specified parent element
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
             .attr("width", vis.width + vis.margin.left + vis.margin.right)
             .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
