@@ -16,12 +16,15 @@ Promise.all(promises)
 function initMainPage(dataArray) {
     let shootingData = dataArray[1];
 
+    // Convert and preprocess data as needed
     shootingData.forEach(d => {
-        d.age = +d.age;  
-        d.date = d.date.split("-")[0]; 
+        d.age = +d.age;  // Convert age to a number if needed
+        d.date = d.date.split("-")[0]; // Extract year from the date
     });
 
+    // Initialize Age Range Visualization
     ageRangeVis = new AgeRangeVis("ageHistogramDiv", shootingData);
 
+    // Initialize Year-Race Visualization
     yearRaceVis = new YearRaceVis("yearRaceDiv", shootingData);
 }
