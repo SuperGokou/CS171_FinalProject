@@ -26,23 +26,22 @@ class YearRaceVis {
 
     wrangleData() {
         let vis = this;
-
-        // Process data
-        vis.processedData = d3.nest()
-            .key(d => d.date.split("-")[0]) 
-            .key(d => d.race)
-            .rollup(v => v.length)
-            .entries(vis.shootingData)
-            .map(d => {
-                let tempObj = {year: d.key};
-                d.values.forEach(raceObj => {
-                    tempObj[raceObj.key] = raceObj.value;
-                });
-                return tempObj;
-            });
-
+    
+        // Group data by year and race
+        let yearRaceMap = d3.rollup(vis.shootingData, v => v.length, d => d.date, d => d.race);
+    
+        // Process data for stacked bar chart
+        vis.processedData = Array.from(yearRaceMap, ([year, races]) => {
+            let raceCounts = { year };
+            for (let [race, count] of races) {
+                raceCounts[race] = count;
+            }
+            return raceCounts;
+        });
+    
         vis.updateVis();
     }
+    
 
     updateVis() {
         let vis = this;
