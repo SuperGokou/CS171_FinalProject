@@ -1,12 +1,10 @@
-
-
 let selectedState = '';
 
 let promises = [
-
     d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-albers-10m.json"),
     d3.csv("data/2023-11-03-washington-post-police-shootings-export.csv")
 ];
+
 Promise.all(promises)
     .then(function (data) {
         initMainPage(data)
@@ -16,12 +14,13 @@ Promise.all(promises)
     });
 
 function initMainPage(dataArray) {
-    // log data
-    // console.log('check out the data', dataArray);
+    // Process and prepare data
+    let geoData = dataArray[0];
+    let shootingData = dataArray[1];
 
-    console.log(dataArray[0])
-    // TODO - init map
-    myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
+    // Convert numerical fields from strings to numbers
+    shootingData.forEach(d => {
+        d.age = +d.age;  // Convert the age field to a number
 
-
+    ageRangeVis = new AgeRangeVis('ageHistogramDiv', shootingData);
 }
