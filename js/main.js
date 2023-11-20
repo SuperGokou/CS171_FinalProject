@@ -1,4 +1,4 @@
-let selectedState = '';
+let ageRangeVis, yearRaceVis;
 
 let promises = [
     d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-albers-10m.json"),
@@ -14,13 +14,14 @@ Promise.all(promises)
     });
 
 function initMainPage(dataArray) {
-    // Process and prepare data
-    let geoData = dataArray[0];
     let shootingData = dataArray[1];
 
-    // Convert numerical fields from strings to numbers
     shootingData.forEach(d => {
-        d.age = +d.age;  // Convert the age field to a number
+        d.age = +d.age;  
+        d.date = d.date.split("-")[0]; 
+    });
 
-    ageRangeVis = new AgeRangeVis('ageHistogramDiv', shootingData);
+    ageRangeVis = new AgeRangeVis("ageHistogramDiv", shootingData);
+
+    yearRaceVis = new YearRaceVis("yearRaceDiv", shootingData);
 }
