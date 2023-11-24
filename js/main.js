@@ -16,12 +16,14 @@ Promise.all(promises)
     });
 
 function initMainPage(dataArray) {
-    // log data
-    // console.log('check out the data', dataArray);
+    // Draw names background
+    background = new Background('names-background', dataArray[1]);
 
+    // Draw calendar
+    calendarVis = new CalendarVis('calendarDiv', dataArray[1]);
     console.log(dataArray[0])
     // TODO - init map
     // myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
-    calendarVis = new CalendarVis('calendarDiv', dataArray[1]);
+
 
 }
