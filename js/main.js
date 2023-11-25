@@ -33,8 +33,7 @@ function initMainPage(dataArray) {
     monthlyVictimsLineChart = new MonthlyVictimsLineChart('monthlyVictimsDiv', dataArray[1], selectedYear);
 
 
-    // TODO - init map
+    // Draw map vis
     // myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
-
 
 }

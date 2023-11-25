@@ -20,8 +20,15 @@ class MonthlyVictimsLineChart {
             .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
+        // Create a div for the tooltip and hide it initially
+        vis.tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
         // Define month names
-        vis.monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Nov", "Dec"]
+        vis.monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"]
+        vis.fullMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
+            "October", "November",  "December"]
 
         // Scales and axes
         vis.xScale = d3.scaleBand()
@@ -128,6 +135,49 @@ class MonthlyVictimsLineChart {
                     year == 'avg' ? 'rgb(128,40,40)' : '#5e5c5c') // Use different colors for different years if needed
                 .attr("stroke-width", 1.5)
                 .attr("d", vis.line);
+
+            // Add vertex labels for average and selected year
+            if (year == vis.selectedYear || year == 'avg') {
+                console.log(vis.displayData[year])
+
+                vis.svg.selectAll(".vertex-" + year)
+                    .data(vis.displayData[year])
+                    .enter().append("circle")
+                    .attr("class", "vertex-" + year)
+                    .attr("cx", (d, i) => vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2)
+                    .attr("cy", (d) => vis.yScale(d))
+                    .attr("r", 5)
+                    .attr("fill", () => year == 'avg' ? 'rgb(128,40,40)' : '#fd3434')
+                    .attr("stroke", () => year == 'avg' ? 'rgb(128,40,40)' : '#fd3434')
+                    .attr("stroke-width", 1.5)
+                    .each(function(d, i) {
+                        d3.select(this).on("mouseover", (event) => {
+                            console.log('moused over!!!!')
+
+                            let monthName = vis.fullMonthNames[i];
+
+                            d3.select(this)
+                                .attr("r", 7)
+                                .attr("stroke-width", 2.5)
+
+                            vis.tooltip
+                                .style("opacity", .9);
+                            vis.tooltip.html(d + " lives lost in " + monthName + (year == 'avg' ? " on average" : " in " + year))
+                                .style("left", (event.pageX) + "px")
+                                .style("top", (event.pageY - 28) + "px");
+
+                        }).on("mouseout", (event) => {
+                            d3.select(this)
+                                .attr("r", 5)
+                                .attr("stroke-width", 1.5)
+
+                            vis.tooltip
+                                .style("opacity", 0);
+
+                        });
+
+                    })
+            }
         });
     }
 }
