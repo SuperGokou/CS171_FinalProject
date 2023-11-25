@@ -20,9 +20,9 @@ class MapVis {
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
         // Initialize tooltip
-        vis.tooltip = d3.select("#" + vis.parentElement).append('g')
+        vis.tooltip = d3.select("body").append('div')
             .attr('class', "tooltip")
-            .style('opacity', 1);
+            .style('opacity', 0);
 
         vis.path = d3.geoPath();
 
@@ -184,10 +184,23 @@ class MapVis {
                 let stateInfo = stateColorMap.get(d.properties.name);
 
                 if (stateInfo) {
+                    let tooltipWidth = vis.tooltip.node().getBoundingClientRect().width;
+                    let tooltipHeight = vis.tooltip.node().getBoundingClientRect().height;
+                    let pageX = event.pageX;
+                    let pageY = event.pageY;
+                    let margin = 10; // Margin from the cursor
+
+                    // Calculate x position
+                    let x = pageX + margin + tooltipWidth > window.innerWidth
+                        ? pageX - margin - tooltipWidth
+                        : pageX + margin;
+
+                    // Calculate y position
+                    let y = pageY + margin + tooltipHeight > window.innerHeight
+                        ? pageY - margin - tooltipHeight
+                        : pageY + margin;
+
                     vis.tooltip
-                        .style("opacity", 1)
-                        .style("left", 0)
-                        .style("top", 0)
                         .html(`
                          <div style="border: thin solid grey; border-radius: 5px; background: lightgray; padding: 10px">
                              <h3>${stateInfo.state}</h3>
@@ -197,8 +210,9 @@ class MapVis {
                              <p>Asian Cases:  ${stateInfo.asianSum}</p>
                              <p>OtherRace Cases: ${stateInfo.otherRaceSum}</p>
                          </div>`)
-                        .style("left", (event.pageX - 150) + "px")
-                        .style("top", (event.pageY - 150) + "px");
+                        .style("left", x + "px")
+                        .style("top", y + "px")
+                        .style("opacity", 1);
                 }
             })
             // Mouseout event listener to remove tooltip and revert fill
