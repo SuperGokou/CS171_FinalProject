@@ -128,56 +128,67 @@ class MonthlyVictimsLineChart {
 
         // Draw line chart
         Object.keys(vis.displayData).forEach(year => {
-            vis.svg.append("path")
-                .datum(vis.displayData[year])
+            let path = vis.svg.selectAll(".line-" + year)
+                .data([vis.displayData[year]]);
+
+            path.enter().append("path")
+                .attr("class", "line-" + year)
+                .merge(path)
+                .transition(1000)
+                .attr("d", vis.line)
                 .attr("fill", "none")
                 .attr("stroke", () => vis.selectedYear == year ? '#fd3434' :
-                    year == 'avg' ? 'rgb(128,40,40)' : '#5e5c5c') // Use different colors for different years if needed
+                    year == 'avg' ? 'rgb(128,40,40)' : '#5e5c5c')
+                .attr("stroke-width", year == vis.selectedYear ? 2 : 1.5);
+
+
+            let isYearSelected = year == vis.selectedYear || year == 'avg';
+            let vertices = vis.svg.selectAll(".vertex-" + year)
+                .data(isYearSelected ? vis.displayData[year] : [])
+
+            vertices.enter().append("circle")
+                .attr("class", "vertex-" + year)
+                .attr("cx", (d, i) => vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2)
+                .attr("cy", (d) => vis.yScale(d))
+                .attr("r", 5)
+                .attr("fill", () => year == 'avg' ? 'rgb(128,40,40)' : '#fd3434')
+                .attr("stroke", () => year == 'avg' ? 'rgb(128,40,40)' : '#fd3434')
                 .attr("stroke-width", 1.5)
-                .attr("d", vis.line);
+                .attr("opacity", 0)
+                .transition()
+                .duration(1000)
+                .attr("opacity", 1)
+                .each(function(d, i) {
+                    d3.select(this).on("mouseover", (event) => {
+                        console.log('moused over!!!!')
 
-            // Add vertex labels for average and selected year
-            if (year == vis.selectedYear || year == 'avg') {
-                console.log(vis.displayData[year])
+                        let monthName = vis.fullMonthNames[i];
 
-                vis.svg.selectAll(".vertex-" + year)
-                    .data(vis.displayData[year])
-                    .enter().append("circle")
-                    .attr("class", "vertex-" + year)
-                    .attr("cx", (d, i) => vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2)
-                    .attr("cy", (d) => vis.yScale(d))
-                    .attr("r", 5)
-                    .attr("fill", () => year == 'avg' ? 'rgb(128,40,40)' : '#fd3434')
-                    .attr("stroke", () => year == 'avg' ? 'rgb(128,40,40)' : '#fd3434')
-                    .attr("stroke-width", 1.5)
-                    .each(function(d, i) {
-                        d3.select(this).on("mouseover", (event) => {
-                            console.log('moused over!!!!')
+                        d3.select(this)
+                            .attr("r", 7)
+                            .attr("stroke-width", 2.5)
 
-                            let monthName = vis.fullMonthNames[i];
+                        vis.tooltip
+                            .style("opacity", .9);
+                        vis.tooltip.html(d + " lives lost in " + monthName + (year == 'avg' ? " on average" : " in " + year))
+                            .style("left", (event.pageX) + "px")
+                            .style("top", (event.pageY - 28) + "px");
 
-                            d3.select(this)
-                                .attr("r", 7)
-                                .attr("stroke-width", 2.5)
+                    }).on("mouseout", (event) => {
+                        d3.select(this)
+                            .attr("r", 5)
+                            .attr("stroke-width", 1.5)
 
-                            vis.tooltip
-                                .style("opacity", .9);
-                            vis.tooltip.html(d + " lives lost in " + monthName + (year == 'avg' ? " on average" : " in " + year))
-                                .style("left", (event.pageX) + "px")
-                                .style("top", (event.pageY - 28) + "px");
+                        vis.tooltip
+                            .style("opacity", 0);
 
-                        }).on("mouseout", (event) => {
-                            d3.select(this)
-                                .attr("r", 5)
-                                .attr("stroke-width", 1.5)
+                    });
+                });
 
-                            vis.tooltip
-                                .style("opacity", 0);
-
-                        });
-
-                    })
-            }
+            vertices.exit()
+                .transition()
+                .duration(200)
+                .remove();
         });
     }
 }

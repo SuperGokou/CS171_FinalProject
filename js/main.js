@@ -17,25 +17,29 @@ Promise.all(promises)
     });
 
 function initMainPage(dataArray) {
-    document.getElementById('calendarYearSelect').addEventListener('change', function () {
-        selectedYear = +this.value;
 
-        calendarVis.redrawCalendar(selectedYear);
-    });
 
     // Draw names background
     background = new Background('names-background', dataArray[1]);
 
     // Draw calendar
-    // calendarVis = new CalendarVis('calendarDiv', dataArray[1], selectedYear);
+    calendarVis = new CalendarVis('calendarDiv', dataArray[1], selectedYear);
 
     // Draw monthly victims line chart
-    // monthlyVictimsLineChart = new MonthlyVictimsLineChart('monthlyVictimsDiv', dataArray[1], selectedYear);
+    monthlyVictimsLineChart = new MonthlyVictimsLineChart('monthlyVictimsDiv', dataArray[1], selectedYear);
 
     // Draw map vis
     myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
 
     // Draw bar chart
     let barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
+
+    document.getElementById('calendarYearSelect').addEventListener('change', function () {
+        selectedYear = +this.value;
+
+        calendarVis.redrawCalendar(selectedYear);
+        monthlyVictimsLineChart.selectedYear = selectedYear;
+        monthlyVictimsLineChart.updateVis();
+    });
 
 }
