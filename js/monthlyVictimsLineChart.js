@@ -37,7 +37,7 @@ class MonthlyVictimsLineChart {
             .padding(0.1);
 
         vis.yScale = d3.scaleLinear()
-            .domain([0, 120])
+            .domain([30, 120])
             .range([vis.height, vis.margin.top]);
 
         // X Axis
@@ -170,7 +170,7 @@ class MonthlyVictimsLineChart {
 
                         vis.tooltip
                             .style("opacity", .9);
-                        vis.tooltip.html(d + " lives lost in " + monthName + (year == 'avg' ? " on average" : " in " + year))
+                        vis.tooltip.html(d + " lives lost in " + monthName + (year == 'avg' ? " on average" : " " + year))
                             .style("left", (event.pageX) + "px")
                             .style("top", (event.pageY - 28) + "px");
 
