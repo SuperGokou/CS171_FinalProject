@@ -1,6 +1,7 @@
 
 
 let selectedState = '';
+let selectedYear = 2022;
 
 let promises = [
 
@@ -16,12 +17,22 @@ Promise.all(promises)
     });
 
 function initMainPage(dataArray) {
+    document.getElementById('calendarYearSelect').addEventListener('change', function () {
+        selectedYear = +this.value;
+
+        calendarVis.redrawCalendar(selectedYear);
+    });
+
     // Draw names background
     background = new Background('names-background', dataArray[1]);
 
     // Draw calendar
-    calendarVis = new CalendarVis('calendarDiv', dataArray[1]);
-    console.log(dataArray[0])
+    // calendarVis = new CalendarVis('calendarDiv', dataArray[1], selectedYear);
+
+    // Draw monthly victims line chart
+    monthlyVictimsLineChart = new MonthlyVictimsLineChart('monthlyVictimsDiv', dataArray[1], selectedYear);
+
+
     // TODO - init map
     // myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
 

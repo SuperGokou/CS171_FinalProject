@@ -1,10 +1,12 @@
 class CalendarVis {
-    constructor(parentElement, data) {
-        console.log('hi!')
+    constructor(parentElement, data, selectedYear) {
         this.parentElement = parentElement;
         this.data = data;
-        this.currentDate = new Date(2022, 0, 1);
-        this.endDate = new Date(2022, 11, 31);
+        this.selectedYear = selectedYear;
+        this.currentDate = new Date(selectedYear, 0, 1);
+        this.endDate = new Date(selectedYear, 11, 31);
+
+        console.log(selectedYear)
 
         this.initVis();
     }
@@ -23,19 +25,21 @@ class CalendarVis {
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
         // Initialize calendar dimensions
-        vis.weekWidth = (vis.width) / 6;
+        vis.weekWidth = (vis.width) / 6.5;
         vis.dayWidth = vis.weekWidth / 7;
 
         // Create color scale
         vis.colorScale = d3.scaleLinear()
             .domain([1, 3])
-            .range(['#ff0000', '#2f0000'])
+            .range(['#ff1616', '#2f0000'])
             .clamp(true)
 
         // Initialize tooltip
-        vis.tooltip = d3.select("#" + vis.parentElement).append('g')
+        vis.tooltip = d3.select("#" + vis.parentElement).append('div')
             .attr('class', "tooltip")
-            .style('opacity', 0);
+            .style('opacity', 0)
+            .style("position", "absolute")
+            .style("pointer-events", "none");
 
         // Initialize drawing interval
         d3.interval(
@@ -50,8 +54,6 @@ class CalendarVis {
         )
 
         this.drawKey()
-
-
     }
 
     // Returns month column pos based on month number
@@ -104,7 +106,7 @@ class CalendarVis {
             .attr("y", vis.height * 0.05 + vis.dayWidth / 1.4 )
             .attr("text-anchor", "middle")
             .attr("fill", (d) => d == 0 ? 'black' : 'white')
-            .text((d) => d)
+            .text((d) => (d == 3 ? '3+' : d))
     }
 
     drawDay() {
@@ -117,21 +119,21 @@ class CalendarVis {
         const color = shootingsToday.length == 0 ? 'white' : vis.colorScale(shootingsToday.length);
 
         // Calculate position for the day's
-        const startDay = new Date(vis.currentDate.getYear(), vis.currentDate.getMonth(), 1).getDay();
+        const startDay = new Date(vis.selectedYear, vis.currentDate.getMonth(), 1).getDay();
         const monthXPos = vis.getMonthXPos(vis.currentDate.getMonth());
-        const weekDayXPos = (vis.currentDate.getDate() + 1 + startDay) % 7 * vis.dayWidth;
+        const weekDayXPos = (vis.currentDate.getDate() - 1 + startDay) % 7 * vis.dayWidth;
         const xPos = monthXPos + weekDayXPos;
 
         const monthYPos = vis.getMonthYPos(vis.currentDate.getMonth())
         const yPos = monthYPos +
-            Math.floor((vis.currentDate.getDate() + 1 + startDay) / 7) * vis.dayWidth;
+            Math.floor((vis.currentDate.getDate() - 1 + startDay) / 7) * vis.dayWidth;
 
         // If first day of month, draw month name
         if (vis.currentDate.getDate() == 1) {
             vis.svg.append("text")
                 .attr("class", "month-label")
                 .attr("x", monthXPos)
-                .attr("y", yPos - vis.dayWidth / 2)
+                .attr("y", monthYPos - vis.dayWidth / 2)
                 .attr("fill", 'white')
                 .text(vis.currentDate.toLocaleString('default', {month: 'long'}))
         }
@@ -143,16 +145,24 @@ class CalendarVis {
             .attr("y", yPos)
             .attr("width", vis.dayWidth)
             .attr("height", vis.dayWidth)
-            .attr("stroke", "black")
+            .attr("stroke", "#5e5c5c")
             .attr("stroke-width", 2)
             .attr("fill", color)
             .attr("rx", 5)
+            .datum({
+                date: new Date(vis.currentDate),
+                victimCount: shootingsToday.length,
+                shootingInfo: shootingsToday
+            })
             .on('mouseover', function (event, d) {
                 vis.tooltip
+                    .html(`
+                     <h4>${vis.formatDate(d.date)}</h4>
+                     <div><strong>Victims:</strong> ${d.victimCount}</div>
+                    `)
                     .style('opacity', 1)
-                    .style('left', (event.pageX + 10) + 'px')
-                    .style('top', (event.pageY - 28) + 'px')
-                    .html(`${vis.formatDate(vis.currentDate)}<br>${shootingsToday.length} shootings`)
+                    .style('left', (event.pageX + 20) + 'px')
+                    .style('top', (event.pageY - vis.tooltip.node().getBoundingClientRect().height - 20) + 'px')
 
                 d3.select(this).attr('stroke', 'white')
             })
@@ -160,21 +170,33 @@ class CalendarVis {
                 vis.tooltip
                     .style('opacity', 0)
 
-                d3.select(this).attr('stroke', 'black')
+                d3.select(this).attr('stroke', '#5e5c5c')
             })
     }
 
-    formatDate() {
+    formatDate(date) {
         let vis = this;
 
-        const year = vis.currentDate.getFullYear()
-        let month = vis.currentDate.getMonth() + 1
-        let day = vis.currentDate.getDate()
+        const year = date.getFullYear()
+        let month = date.getMonth() + 1
+        let day = date.getDate()
 
         // Pad the month and day with a leading zero if they are less than 10
         month = month < 10 ? '0' + month : month;
         day = day < 10 ? '0' + day : day;
 
         return `${year}-${month}-${day}`;
+    }
+
+    redrawCalendar(selectedYear) {
+        let vis = this;
+
+        vis.selectedYear = selectedYear;
+        vis.currentDate = new Date(selectedYear, 0, 1);
+        vis.endDate = new Date(selectedYear, 11, 31);
+
+        vis.svg.selectAll("*").remove();
+
+        vis.drawDay();
     }
 }
