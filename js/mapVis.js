@@ -15,18 +15,18 @@ class MapVis {
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
 
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
-            .attr("width", vis.width)
-            .attr("height", vis.height*2.5)
+            .attr("width", vis.width + vis.margin.left + vis.margin.right)
+            .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
         // Initialize tooltip
-        vis.tooltip = d3.select("#" + vis.parentElement).append('g')
+        vis.tooltip = d3.select("body").append('div')
             .attr('class', "tooltip")
-            .style('opacity', 1);
+            .style('opacity', 0);
 
         vis.path = d3.geoPath();
 
-        vis.viewpoint = {'width': 975, 'height': 975};
+        vis.viewpoint = {'width': 975, 'height': 610};
         vis.zoom = vis.width / vis.viewpoint.width;
 
         vis.map = vis.svg.append("g")
@@ -45,7 +45,7 @@ class MapVis {
 
         vis.legend = vis.svg.append("g")
             .attr("class", "legendLinear")
-            .attr("transform", `translate(${vis.width/1.5},${vis.height*1.8})`);
+            .attr("transform", `translate(${vis.width/2},${vis.height *0.9})`);
 
         vis.legendScale = d3.scaleLinear()
             .range([0, vis.width/3]) ;
@@ -167,6 +167,7 @@ class MapVis {
         vis.states
             .attr("fill", d => {
                 let stateInfo = stateColorMap.get(d.properties.name);
+                console.log("=======>", d);
                 return stateInfo ? vis.colorScale(stateInfo.CaseSum) : "#FFF";
             })
             .attr('stroke-width', '1.5px')
@@ -183,10 +184,23 @@ class MapVis {
                 let stateInfo = stateColorMap.get(d.properties.name);
 
                 if (stateInfo) {
+                    let tooltipWidth = vis.tooltip.node().getBoundingClientRect().width;
+                    let tooltipHeight = vis.tooltip.node().getBoundingClientRect().height;
+                    let pageX = event.pageX;
+                    let pageY = event.pageY;
+                    let margin = 10; // Margin from the cursor
+
+                    // Calculate x position
+                    let x = pageX + margin + tooltipWidth > window.innerWidth
+                        ? pageX - margin - tooltipWidth
+                        : pageX + margin;
+
+                    // Calculate y position
+                    let y = pageY + margin + tooltipHeight > window.innerHeight
+                        ? pageY - margin - tooltipHeight
+                        : pageY + margin;
+
                     vis.tooltip
-                        .style("opacity", 1)
-                        .style("left", 0)
-                        .style("top", 0)
                         .html(`
                          <div style="border: thin solid grey; border-radius: 5px; background: lightgray; padding: 10px">
                              <h3>${stateInfo.state}</h3>
@@ -196,8 +210,9 @@ class MapVis {
                              <p>Asian Cases:  ${stateInfo.asianSum}</p>
                              <p>OtherRace Cases: ${stateInfo.otherRaceSum}</p>
                          </div>`)
-                        .style("left", (event.pageX - 150) + "px")
-                        .style("top", (event.pageY - 150) + "px");
+                        .style("left", x + "px")
+                        .style("top", y + "px")
+                        .style("opacity", 1);
                 }
             })
             // Mouseout event listener to remove tooltip and revert fill

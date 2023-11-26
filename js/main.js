@@ -1,6 +1,7 @@
 
 
 let selectedState = '';
+let selectedYear = 2022;
 
 let promises = [
 
@@ -16,12 +17,29 @@ Promise.all(promises)
     });
 
 function initMainPage(dataArray) {
-    // log data
-    // console.log('check out the data', dataArray);
 
-    console.log(dataArray[0])
-    // TODO - init map
+
+    // Draw names background
+    background = new Background('names-background', dataArray[1]);
+
+    // Draw calendar
+    calendarVis = new CalendarVis('calendarDiv', dataArray[1], selectedYear);
+
+    // Draw monthly victims line chart
+    monthlyVictimsLineChart = new MonthlyVictimsLineChart('monthlyVictimsDiv', dataArray[1], selectedYear);
+
+    // Draw map vis
     myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
-    myAgeBarVis = new ageRangeBarVis('ageRange',dataArray[1], "Victims Age Range");
+
+    // Draw bar chart
+    let barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
+
+    document.getElementById('calendarYearSelect').addEventListener('change', function () {
+        selectedYear = +this.value;
+
+        calendarVis.redrawCalendar(selectedYear);
+        monthlyVictimsLineChart.selectedYear = selectedYear;
+        monthlyVictimsLineChart.updateVis();
+    });
 
 }
