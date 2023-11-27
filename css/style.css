@@ -1,30 +1,38 @@
+/* Tooltip Styles */
 .tooltip {
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 2px solid #ccc;
-    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.9); /* More opacity for better readability */
+    border: 2px solid #666; /* Darker border for contrast */
+    padding: 10px; /* More padding for better spacing */
     position: absolute;
-    border-radius: 10px;
+    border-radius: 8px;
     pointer-events: none;
-}
-.tooltip h3,h4 {
-    text-align: left;
-}
-.tooltip h4 {
-    font: 16px sans-serif;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    font-size: 14px; /* Standard font size */
+    color: #333; /* Darker text for better readability */
 }
 
+/* Table Styles */
 .table {
-    font-size: 0.7em;
+    font-size: 0.85em; /* Slightly larger for readability */
+    color: #333; /* Darker color for contrast */
+    border-collapse: collapse; /* Collapse borders for a cleaner look */
 }
 
-p{
+/* Paragraph Styles */
+p {
     text-align: left;
-    line-height: 0.3em;
-}
-.x-axis, .y-axis {
-    font-size: .5em;
+    line-height: 1.5; /* Increased line height for readability */
+    color: #333; /* Darker color for contrast */
+    font-size: 16px; /* Standard font size */
 }
 
+/* Axis Styles */
+.x-axis, .y-axis {
+    font-size: 0.85em; /* Slightly larger for readability */
+    color: #fff; /* Color set for consistency */
+}
+
+/* Names Background Styles */
 #names-background {
     position: fixed;
     top: 0;
@@ -33,55 +41,45 @@ p{
     height: 100%;
     z-index: -1; /* To keep it in the background */
     color: #3d3d3d;
-    font-family: Arial, sans-serif;
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Modern font-family */
     overflow: hidden;
-    line-height: .5;
+    line-height: 1.5; /* Increased line height for readability */
 }
 
+/* Calendar Styles */
 #calendarDiv {
-
     width: 100%;
     height: 100%;
-
 }
 
 #calendarTitle {
-    font-size: 20px;
+    font-size: 24px; /* Slightly larger for impact */
     text-align: center;
     color: white;
-    margin-bottom: -30px;
+    margin-bottom: 10px; /* Adjusted margin */
     margin-top: 30px;
 }
 
 #calendarYearSelect {
-    border: none;
-    font-size: inherit; /* Match the font size of the title */
-    font-family: inherit; /* Match the font family of the title */
-    color: inherit; /* Match the text color of the title */
-    background: transparent; /* No background */
-    -webkit-appearance: none; /* Removes default styling for dropdown in WebKit browsers */
-    -moz-appearance: none; /* Removes default styling for dropdown in Mozilla browsers */
-    appearance: none;
-    text-decoration: underline;
-
-    /* Position the dropdown arrow */
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24"><path fill="%23FFFFFF" d="M7 10l5 5 5-5z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: 46px -2px;
-    background-size: 14px 14px;
+    border: 1px solid #fff; /* Visible border for clarity */
+    border-radius: 4px; /* Rounded corners */
+    padding: 5px 10px; /* Padding for better touch area */
+    font-size: 16px; /* Larger font size for readability */
+    font-family: inherit;
+    color: white;
+    background: #444; /* Dark background for contrast */
+    appearance: none; /* Standardizes the appearance across browsers */
+    cursor: pointer; /* Indicates that it's selectable */
 }
 
+/* Axis Title Styles */
 .x-axis-title, .y-axis-title {
     fill: #ffffff;
-    font-size: 13px;
-    font-family: Arial, sans-serif;
+    font-size: 16px; /* Slightly larger for readability */
+    font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
-.x-axis, .y-axis {
-    font-size: 12px;
-    font-family: Arial, sans-serif;
-}
-
+/* Axis Path and Line Styles */
 .x-axis path, .y-axis path, .x-axis line, .y-axis line {
     fill: none;
     stroke: #ffffff;
@@ -89,21 +87,102 @@ p{
     shape-rendering: crispEdges;
 }
 
+/* Victim Name Styles */
 .victimName {
     display: inline;
-    /*margin: 1px;*/
-    font-size: 8px;
+    font-size: 10px; /* Slightly larger for readability */
+    color: #130505; /* Lighter color for contrast */
 }
 
+/* Body Styles */
 body {
     background: rgba(16, 16, 16, 0.9);
-    /*background-color: rgb(0, 0, 0, 0.5);*/
-    padding: 1vh 1vw 1vh 1vw;
+    padding: 1vh 1vw;
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Consistent font-family */
+    color: #fff; /* Consistent text color */
 }
 
-h1{
+/* Heading Styles */
+h1 {
     font-size: 50px;
     color: white;
-    margin-bottom: 0px;
-    margin-top: 0px;
+    margin-bottom: 10px; /* Adjusted margin */
+    margin-top: 0;
+}
+
+
+
+/* Header Styles */
+.header {
+    background-color: #cc0000; /* CNN Red */
+    color: white;
+    padding: 10px 20px;
+    text-align: left;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Navigation Bar */
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+}
+
+.nav-bar ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    margin: 0;
+}
+
+.nav-bar ul li {
+    padding: 0 15px;
+}
+
+.nav-bar a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #f2f2f2;
+    color: #666;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 14px;
+    border-top: 1px solid #ccc;
+}
+
+.footer p {
+    margin: 0;
+}
+
+
+/* Hover Effects */
+.nav-bar a:hover {
+    color: #cc0000; /* CNN Red */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .nav-bar ul {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .nav-bar ul li {
+        padding: 5px 0;
+    }
 }
