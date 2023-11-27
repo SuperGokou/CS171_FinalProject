@@ -12,7 +12,7 @@ class ageRangeBarVis {
         let vis = this;
         // console.log(vis.parentElement);
         // console.log(vis.displayData);
-
+        vis.selectedYear = 2022;
         vis.margin = { top: 10, right: 80, bottom: 30, left: 80 };
         vis.width = 850 - vis.margin.left - vis.margin.right;
         vis.height = 450 - vis.margin.top - vis.margin.bottom;
@@ -40,16 +40,19 @@ class ageRangeBarVis {
         vis.wrangleData();
     }
 
-    /*
-     * Data wrangling
-     */
-
-    wrangleData() {
+    wrangleData(selectedYear) {
         let vis = this;
 
-        let ShootingData = Array.from(d3.group(vis.displayData, d => d.age), ([key, value]) => ({key, value}))
+        vis.selectedYear = selectedYear ? selectedYear : vis.selectedYear;
 
-        console.log(ShootingData);
+        let filteredData = vis.displayData.filter(d => {
+            return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear);
+        });
+
+        console.log(vis.selectedYear)
+        console.log(filteredData);
+
+        let ShootingData = Array.from(d3.group(filteredData, d => d.age), ([key, value]) => ({key, value}))
 
         vis.agecount = [];
 
@@ -57,7 +60,8 @@ class ageRangeBarVis {
             vis.agecount.push(
                 {
                     age: age.key,
-                    agecount: age.value.length
+                    agecount: age.value.length,
+                    year: vis.selectedYear
                 }
             )
         });
@@ -118,22 +122,22 @@ class ageRangeBarVis {
             .attr("x", 5)
             .attr("width", d => vis.x(d.count))
             .attr("fill", "darkred");
+        vis.bars.exit().remove();
 
-        vis.svg.selectAll(".bar-label")
+        let labels = vis.svg.selectAll(".bar-label")
             .data(vis.dataArray)
+
+        labels.enter()
             .enter()
             .append("text")
             .attr("class", "bar-label")
+            .merge(labels)
             .attr("x", d => vis.x(d.count) + 10)
-            .attr("y", d => vis.y(d.ageRange) + vis.y.bandwidth() / 2) // Center vertically in the bar
+            .attr("y", d => vis.y(d.ageRange) + vis.y.bandwidth() / 2)
             .attr("dy", ".35em") // Vertically center the text
             .text(d => d.count)
-            .attr("fill", "white"); // Or any color you prefer
-
-        // Remove any bars not needed anymore
-        vis.bars.exit().remove();
+            .attr("fill", "white");
         labels.exit().remove();
-
 
     }
 

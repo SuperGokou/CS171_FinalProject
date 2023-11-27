@@ -136,7 +136,7 @@ class BloodDripBarChart {
         let posX = vis.xScale(state) + vis.xScale.bandwidth() / 2;
         let posY = vis.yScale(vis.display_data[state])
 
-        console.log(vis.display_data[state])
+        // console.log(vis.display_data[state])
 
 
         let barWidth = d3.randomUniform(1, 6)();

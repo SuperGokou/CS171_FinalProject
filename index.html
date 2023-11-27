@@ -16,10 +16,11 @@
             <h1>US Fatal Police Shootings Tracking Dashboard</h1>
         </div>
     </div>
-    <div class="row d-flex justify-content-center" style="height: 70vh; width: 100vw">
+
+    <div class="row d-flex justify-content-center" style="height: 70vh; width: 100vw; border: solid red medium">
         <div class="col-6">
-            <div class="align-self-center" id="calendarDiv" style=" margin-top: -12vh; height: 100%; width: 100%">
-                <h1 id="calendarTitle">Daily Fatal Police Shootings in <select id="calendarYearSelect">
+            <div class="align-self-center" id="calendarDiv" style=" margin-top: 2vh; height: 80%; width: 95%; text-align: center">
+                <label id="calendarTitle">Daily Fatal Police Shootings in <select id="calendarYearSelect">
                     <option value="2022" selected>2022</option>
                     <option value="2021">2021</option>
                     <option value="2020">2020</option>
@@ -28,28 +29,34 @@
                     <option value="2017">2017</option>
                     <option value="2016">2016</option>
                     <option value="2015">2015</option>
-
-                </select></h1>
+                </select></label>
             </div>
         </div>
+
         <div class="col-6">
-            <div class="align-self-center" id="monthlyVictimsDiv" style=" margin-top: -12vh; height: 100%; width: 100%"></div>
+            <div class="align-self-center" id="mapDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
         </div>
 
     </div>
-    <div class="row d-flex justify-content-center" style="height: 70vh; width: 100vw">
+    <div class="row d-flex justify-content-center" style="height: 70vh; width: 100vw;border: solid red medium">
         <div class="col-6">
-            <div class="align-self-center" id="mapDiv" style=" margin-top: -12vh; height: 100%; width: 100%"></div>
+            <div class="align-self-center" id="monthlyVictimsDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
         </div>
         <div class="col-6">
-            <div class="align-self-center" id="barChartDiv" style=" margin-top: -12vh; height: 100%; width: 100%"></div>
+            <div class="align-self-center" id="barChartDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
         </div>
 
     </div>
 
+    <div class="row d-flex justify-content-center" style="height: 70vh; width: 100vw;border: solid red medium">
+        <div class="col-6">
+            <div class="align-self-center" id="ageRangeBarDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+        </div>
+        <div class="col-6">
+            <div class="align-self-center" id="yearRaceDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+        </div>
+    </div>
 
-<!--    <div class="row" style=" padding-top: 1vh; width: 200vw; height: 200vh ">-->
-<!--    </div>-->
 </div>
 
 
@@ -76,5 +83,7 @@
 <script src="js/background.js"></script>
 <script src="js/monthlyVictimsLineChart.js"></script>
 <script src="js/bloodDripBarChart.js"></script>
+<script src="js/ageRangeBarVis.js"></script>
+<!--<script src="js/yearRaceVis.js"></script>-->
 </body>
 </html>

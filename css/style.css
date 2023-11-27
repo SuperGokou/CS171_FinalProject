@@ -100,3 +100,10 @@ body {
     /*background-color: rgb(0, 0, 0, 0.5);*/
     padding: 1vh 1vw 1vh 1vw;
 }
+
+h1{
+    font-size: 50px;
+    color: white;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
