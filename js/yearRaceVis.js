@@ -1,13 +1,6 @@
-
 class YearRaceVis {
     constructor(parentElement, shootingData) {
         this.parentElement = parentElement;
-
-        shootingData.forEach(d => {
-            d.age = +d.age;  // Convert age to a number if needed
-            d.date = d.date.split("-")[0]; // Extract year from the date
-        });
-
         this.shootingData = shootingData;
 
         this.initVis();
@@ -70,17 +63,14 @@ class YearRaceVis {
             .selectAll("g")
             .data(vis.series)
             .enter().append("g")
-            .attr("fill", d => vis.color(d.key))
+                .attr("fill", d => vis.color(d.key))
             .selectAll("rect")
             .data(d => d)
             .enter().append("rect")
-            .attr("x", d => vis.x(d.data.year))
-            .attr("y", d => vis.y(d[1]))
-            .attr("height", d => {
-                let height = vis.y(d[0]) - vis.y(d[1]);
-                return isNaN(height) ? 0 : height;  // Use 0 height for NaN cases
-            })
-            .attr("width", vis.x.bandwidth());
+                .attr("x", d => vis.x(d.data.year))
+                .attr("y", d => vis.y(d[1]))
+                .attr("height", d => vis.y(d[0]) - vis.y(d[1]))
+                .attr("width", vis.x.bandwidth());
 
         vis.svg.append("g")
             .attr("class", "axis")
