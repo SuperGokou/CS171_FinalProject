@@ -146,6 +146,21 @@ class MonthlyVictimsLineChart {
             let vertices = vis.svg.selectAll(".vertex-" + year)
                 .data(isYearSelected ? vis.displayData[year] : [])
 
+            let textLabels = vis.svg.selectAll(".text-label-" + year)
+                .data(isYearSelected ? vis.displayData[year] : [])
+
+            textLabels.enter().append("text")
+                .attr("class", "text-label-" + year)
+                .merge(textLabels)
+                .attr("x", (d, i) => vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2)
+                .attr("y", d => vis.yScale(d) - 15) // Position above the vertex
+                .text(d => d) // The text to display
+                .attr("text-anchor", "middle")
+                .attr("fill", "#ffffff") // Text color
+                .style("font-size", "12px");
+
+            textLabels.exit().remove();
+
             vertices.enter().append("circle")
                 .attr("class", "vertex-" + year)
                 .attr("cx", (d, i) => vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2)

@@ -13,9 +13,11 @@ class ageRangeBarVis {
         // console.log(vis.parentElement);
         // console.log(vis.displayData);
         vis.selectedYear = 2022;
-        vis.margin = { top: 10, right: 80, bottom: 30, left: 80 };
-        vis.width = 850 - vis.margin.left - vis.margin.right;
-        vis.height = 450 - vis.margin.top - vis.margin.bottom;
+        vis.margin = { top: 80, right: 80, bottom: 80, left: 80 };
+
+        vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
+        vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
+
 
         vis.svg = d3.select('#' + vis.parentElement).append("svg")
             .attr("width", vis.width + vis.margin.left + vis.margin.right)
