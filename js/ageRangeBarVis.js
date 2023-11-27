@@ -143,3 +143,5 @@ class ageRangeBarVis {
     }
 
 }
+
+//edited, needs color correction on bars
