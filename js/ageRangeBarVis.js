@@ -128,13 +128,12 @@ class ageRangeBarVis {
             .data(vis.dataArray)
 
         labels.enter()
-            .enter()
             .append("text")
             .attr("class", "bar-label")
             .merge(labels)
             .attr("x", d => vis.x(d.count) + 10)
             .attr("y", d => vis.y(d.ageRange) + vis.y.bandwidth() / 2)
-            .attr("dy", ".35em") // Vertically center the text
+            .attr("dy", ".35em")
             .text(d => d.count)
             .attr("fill", "white");
         labels.exit().remove();
