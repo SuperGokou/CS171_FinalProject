@@ -213,6 +213,7 @@ class CalendarVis {
         let vis = this;
 
         vis.selectedYear = selectedYear;
+        console.log(selectedYear)
         vis.currentDate = new Date(selectedYear, 0, 1);
         vis.endDate = new Date(selectedYear, 11, 31);
 

@@ -3,12 +3,12 @@ class MapVis {
         this.parentElement = parentElement;
         this.usaShootingData = usaShootingData;
         this.geoData = geoData;
-        this.parseDate = d3.timeParse("%m/%d/%Y");
         this.initVis();
     }
 
     initVis() {
         let vis = this;
+        vis.selectedYear = 2022;
 
         vis.margin = {top: 10, right: 60, bottom: 10, left: 60};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
@@ -73,20 +73,25 @@ class MapVis {
         vis.wrangleData();
     }
 
-    wrangleData() {
+    wrangleData(selectedYear) {
         let vis = this;
 
-        // prepare covid data by grouping all rows by state
-        let ShootingData = Array.from(d3.group(vis.usaShootingData, d => d.state), ([key, value]) => ({key, value}))
+        vis.selectedYear = selectedYear ? selectedYear : vis.selectedYear;
 
-        // console.log(ShootingData)
+
+        let filteredData = vis.usaShootingData.filter(d => {
+            return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear);
+        });
+
+
+        // prepare covid data by grouping all rows by state
+        let ShootingData = Array.from(d3.group(filteredData, d => d.state), ([key, value]) => ({key, value}))
 
         // init final data structure in which both data sets will be merged into
         vis.stateInfo = []
 
         // merge
         ShootingData.forEach(state => {
-
             // init counters
             let CasesSum = 0;
             let blackSum = 0;
@@ -94,14 +99,9 @@ class MapVis {
             let asianSum = 0;
             let otherRaceSum = 0;
 
-            vis.usaShootingData.forEach(row => {
-                if (row.state === state.key) {
-                    CasesSum += 1;
-                }
-            })
-
             // calculate new cases by summing up all the entries for each state
             state.value.forEach(value => {
+                CasesSum += 1;
                 if(value.race === "Black"){
                     blackSum += 1;
                 }else if (value.race === "White"){
@@ -117,6 +117,7 @@ class MapVis {
             vis.stateInfo.push(
                 {
                     state: nameConverter.getFullName(state.key),
+                    year: vis.selectedYear,
                     CaseSum: CasesSum,
                     blackSum: blackSum,
                     whiteSum: whiteSum,
@@ -125,10 +126,11 @@ class MapVis {
                 }
             )
         })
+
         console.log('final data structure for mapVis', vis.stateInfo);
 
-        vis.colorScale.domain([0, d3.max(vis.stateInfo, d => d.CaseSum)]);
-        vis.legendScale.domain([0, d3.max(vis.stateInfo, d => d.CaseSum)]);
+        vis.colorScale.domain([0, d3.max(vis.stateInfo, d => d.year === vis.selectedYear ? d.CaseSum : 0)]);
+        vis.legendScale.domain([0, d3.max(vis.stateInfo, d => d.year === vis.selectedYear ? d.CaseSum : 0)]);
 
         vis.updateVis();
     }
@@ -137,7 +139,6 @@ class MapVis {
         let vis = this;
 
         let stateColorMap = new Map(vis.stateInfo.map(d => [d.state, d]));
-        console.log(stateColorMap)
 
         // Draw the legend rectangle
         vis.legend.append("rect")
@@ -167,7 +168,7 @@ class MapVis {
         vis.states
             .attr("fill", d => {
                 let stateInfo = stateColorMap.get(d.properties.name);
-                console.log("=======>", d);
+                // console.log("=======>", d);
                 return stateInfo ? vis.colorScale(stateInfo.CaseSum) : "#FFF";
             })
             .attr('stroke-width', '1.5px')

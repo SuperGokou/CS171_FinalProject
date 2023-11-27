@@ -1,5 +1,3 @@
-
-
 let selectedState = '';
 let selectedYear = 2022;
 
@@ -18,7 +16,6 @@ Promise.all(promises)
 
 function initMainPage(dataArray) {
 
-
     // Draw names background
     background = new Background('names-background', dataArray[1]);
 
@@ -31,15 +28,23 @@ function initMainPage(dataArray) {
     // Draw map vis
     myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
 
+    // yearRaceVis = new YearRaceVis("yearRaceDiv", dataArray[1]);
+
     // Draw bar chart
     let barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
+
+    //draw age range bar
+    myageRangeBarVis = new ageRangeBarVis('ageRangeBarDiv', dataArray[1]);
+
 
     document.getElementById('calendarYearSelect').addEventListener('change', function () {
         selectedYear = +this.value;
 
         calendarVis.redrawCalendar(selectedYear);
+        myMapVis.wrangleData(selectedYear);
         monthlyVictimsLineChart.selectedYear = selectedYear;
         monthlyVictimsLineChart.updateVis();
+        myageRangeBarVis.wrangleData(selectedYear);
     });
 
 }
