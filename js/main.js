@@ -28,7 +28,7 @@ function initMainPage(dataArray) {
     // Draw map vis
     myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
 
-    // yearRaceVis = new YearRaceVis("yearRaceDiv", dataArray[1]);
+    yearRaceVis = new YearRaceVis("yearRaceDiv", dataArray[1]);
 
     // Draw bar chart
     let barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
@@ -48,3 +48,4 @@ function initMainPage(dataArray) {
     });
 
 }
+// BArs are fixed, neeed to fix color coding on the race chart
