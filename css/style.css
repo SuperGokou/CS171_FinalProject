@@ -41,7 +41,7 @@ p {
     height: 100%;
     z-index: -1; /* To keep it in the background */
     color: #3d3d3d;
-    font-family: 'Helvetica Neue', Arial, sans-serif; /* Modern font-family */
+    font-family: 'Merriweather'; /* Modern font-family */
     overflow: hidden;
     line-height: 1.5; /* Increased line height for readability */
 }
@@ -76,7 +76,7 @@ p {
 .x-axis-title, .y-axis-title {
     fill: #ffffff;
     font-size: 16px; /* Slightly larger for readability */
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Merriweather'; /* Modern font-family */
 }
 
 /* Axis Path and Line Styles */
@@ -90,16 +90,75 @@ p {
 /* Victim Name Styles */
 .victimName {
     display: inline;
-    font-size: 10px; /* Slightly larger for readability */
-    color: #130505; /* Lighter color for contrast */
+    font-size: 14px; /* Slightly larger for readability */
+    color: #5e5c5c; /* Lighter color for contrast */
+}
+
+/* Explanation style */
+.explanation {
+    background-color: rgba(249, 249, 249, 0.5); /* Light background for the text */
+    color: #333; /* Dark text color for readability */
+    padding: 4vh 2vw; /* Adequate padding around the text */
+    font-size: 1.2em; /* Slightly larger font size */
+    line-height: 1.6; /* Comfortable line spacing */
+    border-radius: 8px; /* Rounded corners */
+}
+
+.snap-container {
+    scroll-snap-type: y mandatory; /* Enables vertical scroll snapping */
+    overflow-y: scroll; /* Enables scrolling */
+    height: 100vh; /* Full viewport height */
+}
+
+.snap-section {
+    height: 100vh; /* Full viewport height */
+    scroll-snap-align: start; /* Snaps to the start of the section */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Center content */
+    opacity: 0; /* Hide sections by default */
+    transition: opacity 0.5s ease; /* Smooth transition for opacity */
+}
+
+.snap-section.visible {
+    opacity: 1; /* Show sections when visible */
+}
+
+.snap-section.paragraph {
+    width: 50vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.visualization {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+#calendarDiv {
+    width: 100%;
+    height: 75%;
+    margin-bottom: 12.5%;
+    margin-top: 12.5%;
+}
+
+#monthlyVictimsDiv {
+    width: 100%;
+    height: 75%;
+    margin-bottom: 12.5%;
+    margin-top: 12.5%;
 }
 
 /* Body Styles */
 body {
     background: rgba(16, 16, 16, 0.9);
     padding: 1vh 1vw;
-    font-family: 'Helvetica Neue', Arial, sans-serif; /* Consistent font-family */
+    font-family: 'Merriweather'; /* Consistent font-family */
     color: #fff; /* Consistent text color */
+    height: 100%;
+    overflow: hidden;
+    overflow-x: hidden;
 }
 
 /* Heading Styles */
@@ -110,15 +169,12 @@ h1 {
     margin-top: 0;
 }
 
-
-
 /* Header Styles */
 .header {
-    background-color: #cc0000; /* CNN Red */
     color: white;
     padding: 10px 20px;
     text-align: left;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Merriweather', serif; /* Serif font-family */';
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 

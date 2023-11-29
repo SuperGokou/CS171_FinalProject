@@ -14,6 +14,8 @@ Promise.all(promises)
         console.log(err)
     });
 
+
+
 function initMainPage(dataArray) {
 
     // Draw names background
@@ -37,6 +39,7 @@ function initMainPage(dataArray) {
     myageRangeBarVis = new ageRangeBarVis('ageRangeBarDiv', dataArray[1]);
 
 
+    // Event listener for year selection
     document.getElementById('calendarYearSelect').addEventListener('change', function () {
         selectedYear = +this.value;
 
@@ -47,5 +50,52 @@ function initMainPage(dataArray) {
         myageRangeBarVis.wrangleData(selectedYear);
     });
 
+    // Show sections
+    showSections();
+
+    // Lazy load video game
+    lazyLoadVideoGame();
 }
+
+function showSections() {
+    let sections = document.querySelectorAll('.snap-section');
+    sections.forEach(section => {
+        section.classList.add('visible');
+    })
+}
+
+function lazyLoadVideoGame() {
+    let gameLoaded = false;
+
+    let observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !gameLoaded) {
+                let iframe = document.createElement('iframe');
+                iframe.src = "https://openprocessing.org/sketch/2067734/embed/?plusEmbedHash=74cbcc79&userID=398747&plusEmbedTitle=true&show=sketch";
+                iframe.loading = "lazy";
+                iframe.style.width = "100%";
+                iframe.style.height = "100%";
+                entry.target.appendChild(iframe);
+
+                gameLoaded = true;
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: [0.5] }); // Adjust threshold as needed
+
+    let gameDiv = document.getElementById('gameDiv');
+    observer.observe(gameDiv);
+
+    // Check if document is already loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            observer.observe(gameDiv);
+        });
+    } else {
+        // Document is already loaded, observe immediately
+        observer.observe(gameDiv);
+        console.log('HIII')
+    }
+}
+
 // BArs are fixed, neeed to fix color coding on the race chart
