@@ -5,60 +5,81 @@
     <title style="text-align: center; color: darkred">CS171 Final Project</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
+    <link href='http://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet' type='text/css'>
 </head>
 <body>
 <div id="names-background"></div>
 
-<div class="container-fluid" style="height: 100vh; width: 100vw; padding-top: 1vh; padding-left: 1vw;">
-
-    <div class="row d-flex justify-content-center" style="height: 10vh;">
-        <div class="align-self-center">
-            <h1>US Fatal Police Shootings Tracking Dashboard</h1>
-        </div>
+<div class="snap-container">
+    <div class="snap-section" id="titleSection">
+        <h1 class="header">The Extrajudicial Execution Epidemic</h1>
     </div>
-
-    <div class="row d-flex justify-content-center" style="height: 70vh; width: 100vw; border: solid red medium">
-        <div class="col-6">
-            <div class="align-self-center" id="calendarDiv" style=" margin-top: 2vh; height: 80%; width: 95%; text-align: center">
-                <label id="calendarTitle">Daily Fatal Police Shootings in <select id="calendarYearSelect">
-                    <option value="2022" selected>2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
-                    <option value="2018">2018</option>
-                    <option value="2017">2017</option>
-                    <option value="2016">2016</option>
-                    <option value="2015">2015</option>
-                </select></label>
+    <div class="snap-section paragraph" id="introParagraph">
+        <p class="explanation">
+            The United States has a problem. A problem that has been plaguing the country for decades.
+            A problem that has been ignored by the government and the media. A problem that has been swept under the rug for far
+            [placeholder text]
+        </p>
+    </div>
+    <div class="snap-section">
+        <div class = "row d-flex justify-content-center visualization">
+            <div class="col-6">
+                <div class="align-self-center" id="calendarDiv">
+                    <label id="calendarTitle">Daily Fatal Police Shootings in <select id="calendarYearSelect">
+                        <option value="2022" selected>2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                    </select></label>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="align-self-center" id="monthlyVictimsDiv"></div>
             </div>
         </div>
-
-        <div class="col-6">
-            <div class="align-self-center" id="mapDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
-        </div>
-
     </div>
-    <div class="row d-flex justify-content-center" style="height: 70vh; width: 100vw;border: solid red medium">
-        <div class="col-6">
-            <div class="align-self-center" id="monthlyVictimsDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
-        </div>
-        <div class="col-6">
-            <div class="align-self-center" id="barChartDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
-        </div>
-
+    <div class="snap-section paragraph">
+        <p class="explanation">
+            Segue into discussion of geographic distribution of data...
+        </p>
     </div>
-
-    <div class="row d-flex justify-content-center" style="height: 70vh; width: 100vw;border: solid red medium">
-        <div class="col-6">
-            <div class="align-self-center" id="ageRangeBarDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
-        </div>
-        <div class="col-6">
-            <div class="align-self-center" id="yearRaceDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+    <div class="snap-section">
+        <div class="row d-flex justify-content-center visualization">
+            <div class="col-6">
+                <div class="align-self-center" id="mapDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+            </div>
+            <div class="col-6">
+                <div class="align-self-center" id="barChartDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+            </div>
         </div>
     </div>
-
+    <div class="snap-section paragraph">
+        <p class="explanation">
+            Segue into discussion of demographic distribution of data...
+        </p>
+    </div>
+    <div class="snap-section">
+        <div class="row d-flex justify-content-center visualization">
+            <div class="col-6">
+                <div class="align-self-center" id="ageRangeBarDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+            </div>
+            <div class="col-6">
+                <div class="align-self-center" id="yearRaceDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+            </div>
+        </div>
+    </div>
+    <div class="snap-section paragraph" id="gameExplanationDiv">
+        <p class="explanation">
+            Segue into final game... (explain mechanics, etc)
+        </p>
+    </div>
+    <div class="snap-section" id="gameDiv">
+    </div>
 </div>
-
 
 <!-- BOOTSTRAP -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
