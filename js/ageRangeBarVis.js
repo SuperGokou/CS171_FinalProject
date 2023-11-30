@@ -4,20 +4,16 @@ class ageRangeBarVis {
         this.parentElement = parentElement;
         this.data = usaShootingData;
         this.displayData = usaShootingData;
-        // console.log(this.displayData);
         this.initVis();
     }
 
     initVis() {
         let vis = this;
-        // console.log(vis.parentElement);
-        // console.log(vis.displayData);
         vis.selectedYear = 2022;
         vis.margin = { top: 80, right: 80, bottom: 80, left: 80 };
 
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
-
 
         vis.svg = d3.select('#' + vis.parentElement).append("svg")
             .attr("width", vis.width + vis.margin.left + vis.margin.right)
@@ -38,7 +34,11 @@ class ageRangeBarVis {
         vis.svg.append("g")
             .attr("class", "y-axis");
 
-        // (Filter, aggregate, modify data)
+        // Tooltip setup
+        vis.tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
         vis.wrangleData();
     }
 
@@ -50,9 +50,6 @@ class ageRangeBarVis {
         let filteredData = vis.displayData.filter(d => {
             return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear);
         });
-
-        console.log(vis.selectedYear)
-        console.log(filteredData);
 
         let ShootingData = Array.from(d3.group(filteredData, d => d.age), ([key, value]) => ({key, value}))
 
@@ -87,11 +84,9 @@ class ageRangeBarVis {
 
         // Filter out the "NaN-NaN" age range
         delete vis.groupedData["NaN-NaN"];
-        console.log(vis.groupedData);
 
         vis.updateVis();
     }
-
 
     updateVis() {
         let vis = this;
@@ -123,9 +118,23 @@ class ageRangeBarVis {
             .attr("height", vis.y.bandwidth())
             .attr("x", 5)
             .attr("width", d => vis.x(d.count))
-            .attr("fill", "darkred");
+            .attr("fill", "darkred")
+            .on("mouseover", function(event, d) {
+                vis.tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                vis.tooltip.html("Count: " + d.count)
+                    .style("left", (event.pageX) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                vis.tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
         vis.bars.exit().remove();
 
+        // Draw bar labels (if necessary)
         let labels = vis.svg.selectAll(".bar-label")
             .data(vis.dataArray)
 
@@ -143,5 +152,3 @@ class ageRangeBarVis {
     }
 
 }
-
-//edited, needs color correction on bars
