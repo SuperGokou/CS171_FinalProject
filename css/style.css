@@ -242,3 +242,37 @@ h1 {
         padding: 5px 0;
     }
 }
+
+
+
+/* Bar Entrance Animation */
+.bar-enter {
+    height: 0;
+}
+
+.bar-enter-active {
+    height: var(--actual-height); /* Replace with the actual height calculation */
+    transition: height 0.5s ease-in;
+}
+
+/* Tooltip Fade-In and Fade-Out */
+.tooltip {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0; /* Initially hidden */
+}
+
+.tooltip-show {
+    opacity: 1;
+}
+
+/* Legend Pop-In Animation */
+.legend {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.5s ease-in;
+}
+
+.legend-active {
+    opacity: 1;
+    transform: translateX(0);
+}
