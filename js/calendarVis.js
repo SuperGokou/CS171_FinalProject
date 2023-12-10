@@ -111,7 +111,7 @@ class CalendarVis {
         vis.currentDate = new Date(vis.selectedYear, 0, 1);
 
         while(vis.currentDate.getFullYear() === vis.selectedYear) {
-            const shootingsToday = vis.filteredData.filter(d => d.date === vis.formatDate(vis.currentDate));
+            const shootingsToday = vis.filteredData.filter(d => d.date === vis.formatDateForParsing(vis.currentDate));
             this.displayData.push({
                 date: new Date(vis.currentDate),
                 victimCount: shootingsToday.length,
@@ -178,19 +178,78 @@ class CalendarVis {
                     ? pageY - margin - tooltipHeight
                     : pageY + margin;
 
-                let html = `<h4>${vis.formatDate(d.date)}</h4>
-                     <div><strong>${d.victimCount} Victim${d.victimCount === 1 ? "" : "s"}</strong></div>`
+                let html = `
+                    <h4 class="tooltip-date">${vis.formatDateForDisplay(d.date)}</h4>
+                `;
 
-                let victimList = `<ul>`
+                console.log(d.date)
+
                 if (d.victimCount > 0) {
-                    d.shootingInfo.forEach(victim => {
-                        victimList += `<li>${victim.name == "" ? "Name Unknown" : victim.name}, ${victim.age == "" ? "Age Unknown" : victim.age}, ${victim.race}</li>`
-                    })
-                }
-                victimList += `</ul>`
-                html += victimList
+                    html += `
+                    <div><strong>${d.victimCount} Victim${d.victimCount === 1 ? "" : "s"}</strong></div>
+                    <table class="tooltip-table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Age</th>
+                            <th>Race</th>
+                            <th>Gender</th>
+                            <th>Armed With</th>
+                            <th>Fleeing</th>
+                        </tr>
+                        </thead>
+                        <tbody>`;
 
-                // console.log(d)
+                    d.shootingInfo.forEach(victim => {
+                        let ageDisplay = victim.age ? parseInt(victim.age) : "Unknown";
+                        let armedDisplay = "";
+                        if (victim.armed_status === "armed") {
+                            switch (victim.armed) {
+                                case "gun":
+                                    armedDisplay += "Gun";
+                                    break;
+                                case "knife":
+                                    armedDisplay += "Knife";
+                                    break;
+                                case "unarmed":
+                                    armedDisplay += "Unarmed";
+                                    break;
+                                case "replica":
+                                    armedDisplay += "Toy Weapon";
+                                    break;
+                                case "other":
+                                    armedDisplay += "Other Object";
+                                    break;
+                                case "blunt_object":
+                                    armedDisplay += "Blunt Object";
+                                    break;
+                                case "vehicle":
+                                    armedDisplay += `\"Vehicle\"`;
+                                    break;
+                                default:
+                                    armedDisplay += "Unknown";
+                            }
+                        } else if (victim.armed_status === "unarmed") {
+                            armedDisplay += "Nothing"
+                        } else {
+                            armedDisplay += "Unknown Armed Status"
+                        }
+                        html += `
+                            <tr>
+                                <td class="tooltip-name">${victim.name || "Name Unknown"}</td>
+                                <td>${ageDisplay}</td>
+                                <td>${victim.race || "Unknown"}</td>
+                                <td>${vis.capitalize(victim.gender) || "Unknown"}</td>
+                                <td>${armedDisplay}</td>
+                                <td>${victim.flee ? "Yes" : "No"}</td>
+                            </tr>`;
+                    });
+
+                    html += `</tbody></table>`;
+                } else {
+                    html += `
+                        <div><strong>No Victims Reported</strong></div>`;
+                }
 
                 vis.tooltip
                     .html(html)
@@ -275,7 +334,7 @@ class CalendarVis {
 
     }
 
-    formatDate(date) {
+    formatDateForParsing(date) {
         let vis = this;
 
         const year = date.getFullYear()
@@ -287,6 +346,17 @@ class CalendarVis {
         day = day < 10 ? '0' + day : day;
 
         return `${year}-${month}-${day}`;
+    }
+
+    formatDateForDisplay(date) {
+        let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        return `${days[date.getDay()] + ", " + months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear()}`;
+    }
+
+    capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
     }
 
     redrawCalendar(selectedYear, filters) {

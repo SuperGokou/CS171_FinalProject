@@ -104,18 +104,24 @@ class MapVis {
             let blackSum = 0;
             let whiteSum = 0;
             let asianSum = 0;
+            let hispanicSum = 0;
+            let nativeAmericanSum = 0;
             let otherRaceSum = 0;
 
             // calculate new cases by summing up all the entries for each state
             state.value.forEach(value => {
                 CasesSum += 1;
-                if(value.race === "Black"){
+                if (value.race === "Black"){
                     blackSum += 1;
-                }else if (value.race === "White"){
+                } else if (value.race === "White"){
                     whiteSum += 1;
-                }else if (value.race === "Asian"){
+                } else if (value.race === "Asian"){
                     asianSum += 1;
-                }else {
+                } else if (value.race === "Hispanic") {
+                    hispanicSum += 1;
+                } else if (value.race === "Native American") {
+                    nativeAmericanSum += 1;
+                } else {
                     otherRaceSum += 1;
                 }
             });
@@ -129,6 +135,8 @@ class MapVis {
                     blackSum: blackSum,
                     whiteSum: whiteSum,
                     asianSum: asianSum,
+                    hispanicSum: hispanicSum,
+                    nativeAmericanSum: nativeAmericanSum,
                     otherRaceSum: otherRaceSum
                 }
             )
@@ -237,14 +245,55 @@ class MapVis {
 
                     vis.tooltip
                         .html(`
-                         <div style="border: thin solid grey; border-radius: 5px; background: lightgray; padding: 10px">
-                             <h3>${stateInfo.state}</h3>
-                             <p>TotalCase:      ${stateInfo.CaseSum}</p>
-                             <p>Black Cases:  ${stateInfo.blackSum}</p>
-                             <p>White Cases: ${stateInfo.whiteSum}</p>
-                             <p>Asian Cases:  ${stateInfo.asianSum}</p>
-                             <p>OtherRace Cases: ${stateInfo.otherRaceSum}</p>
-                         </div>`)
+                         <div class="tooltip-content">
+                            <h3>${stateInfo.state} Victims</h3>
+                            <table class="tooltip-table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Count</th>
+                                        <th>Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Total</th>
+                                        <td>${stateInfo.CaseSum}</td>
+                                        <td>${vis.formatRate(stateInfo.rateSum)}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Black</th>
+                                        <td>${stateInfo.blackSum}</td>
+                                        <td>${vis.formatRate(stateInfo.blackRate)}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Hispanic</th>
+                                        <td>${stateInfo.hispanicSum}</td>
+                                        <td>${vis.formatRate(stateInfo.hispanicRate)}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>White</th>
+                                        <td>${stateInfo.whiteSum}</td>
+                                        <td>${vis.formatRate(stateInfo.whiteRate)}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Asian</th>
+                                        <td>${stateInfo.asianSum}</td>
+                                        <td>${vis.formatRate(stateInfo.asianRate)}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Indigenous</th>
+                                        <td>${stateInfo.nativeAmericanSum}</td>
+                                        <td>${vis.formatRate(stateInfo.nativeAmericanRate)}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Other</th>
+                                        <td>${stateInfo.otherRaceSum}</td>
+                                        <td>${vis.formatRate(stateInfo.otherRaceRate)}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>`)
                         .style("left", x + "px")
                         .style("top", y + "px")
                         .style("opacity", 1);
@@ -266,6 +315,9 @@ class MapVis {
             });
     }
 
+    formatRate(rate) {
+        return rate ? rate.toFixed(2) + "per million" : "N/A";
+    }
     redrawMavis(selectedYear, filters) {
         let vis = this;
         vis.selectedYear = selectedYear;

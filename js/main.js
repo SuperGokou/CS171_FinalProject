@@ -157,7 +157,6 @@ function lazyLoadBloodDrip() {
     let dripping = false;
 
     let observer = new IntersectionObserver(function(entries) {
-        console.log(entries)
         entries.forEach(entry => {
             if (entry.isIntersecting && !dripping) {
                 dripping = true;
@@ -177,5 +176,3 @@ function lazyLoadBloodDrip() {
         observer.observe(dripChartDiv);
     }
 }
-
-// BArs are fixed, neeed to fix color coding on the race chart
