@@ -52,9 +52,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row d-flex justify-content-center rounded-div filter-group visualization" style="height: 12vh; margin-left: 10px">
-                <div style="padding-top: 10px">
 
+            <div class="row d-flex justify-content-center rounded-div filter-group visualization" id="stickyDiv" style="height: 12vh; margin-left: 10px">
+                <div style="padding-top: 10px">
                 </div>
                 <div class="col-4">
                     <div class="row justify-content-center filter-title">
@@ -69,7 +69,6 @@
                                 data-chart="temporal" data-filterType="gender" data-filterValue="non-binary">Non-Binary</button>
                         <button type="button" class="btn filter-btn active"
                                 data-chart="temporal" data-filterType="gender" data-filterValue="unknown">Unknown</button>
-
                     </div>
                 </div>
                 <div class="col-4">
@@ -109,6 +108,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
     <div class="snap-section paragraph">
@@ -116,29 +116,31 @@
             Maps and charts showing the distribution of police shootings in the United States...
         </p>
     </div>
+
     <div class="snap-section">
-        <div class="row d-flex justify-content-center visualization">
+        <div class="row d-flex justify-content-center visualization" style="height: 80vh">
             <div class="col-6">
-                <div class="align-self-center" id="mapDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+                <div class="align-self-center rounded-div" id="mapDiv" style=" margin-top: 2vh; height: 85%; width: 95%"></div>
             </div>
             <div class="col-6">
-                <div class="align-self-center" id="barChartDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+                <div class="align-self-center rounded-div" id="barChartDiv" style=" margin-top: 2vh; height: 85%; width: 95%"></div>
             </div>
         </div>
     </div>
+
     <div class="snap-section paragraph">
         <p class="explanation">
             Bar charts representing the age distribution of victims and the racial distribution of victims...
         </p>
     </div>
     <div class="snap-section">
-        <div class="row d-flex justify-content-center visualization">
+        <div class="row d-flex justify-content-center visualization" style="height: 80vh">
             <div class="col-6">
-                <div class="align-self-center" id="ageRangeBarDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+                <div class="align-self-center rounded-div" id="ageRangeBarDiv" style=" margin-top: 2vh; height: 85%; width: 95%"></div>
             </div>
             <div class="col-6">
                 <button class="btn" id="animatedBarChartButton">Switch to Victim Rate</button>
-                <div class="align-self-center" id="yearRaceDiv" style=" margin-top: 2vh; height: 80%; width: 95%"></div>
+                <div class="align-self-center rounded-div" id="yearRaceDiv" style=" margin-top: 2vh; height: 85%; width: 95%"></div>
             </div>
         </div>
     </div>
@@ -177,6 +179,7 @@
 <script src="js/ageRangeBarVis.js"></script>
 <script src="js/yearRaceVis.js"></script>
 <script src="js/animatedBarChart.js"></script>
+<!--<script src="js/stickToChart.js"></script>-->
 </body>
 </html>
 

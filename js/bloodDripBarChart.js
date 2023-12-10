@@ -36,7 +36,7 @@ class BloodDripBarChart {
         let vis= this;
 
         // Create svg element
-        vis.margin = {top: 40, right: 20, bottom: 20, left: 40};
+        vis.margin = {top: 80, right: 20, bottom: 80, left: 40};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
 
@@ -76,14 +76,15 @@ class BloodDripBarChart {
             .attr("transform", `translate(${vis.margin.left}, 0)`)
             .call(vis.yAxis)
             .selectAll("text")
-            .style("fill", "#ffffff")
+            .style("fill", "#ffffff");
 
         // Axis titles
         vis.svg.append("text")
             .attr("class", "x-axis-title")
-            .attr("transform", `translate(${vis.width / 2}, ${vis.margin.top - 30})`) // Adjust positioning
+            .attr("transform", `translate(${vis.width / 2}, ${vis.margin.top - 60})`) // Adjust positioning
             .style("text-anchor", "middle")
-            .text("State");
+            .style("font-size", "18px")
+            .text("Drip Bar Chart for State");
 
         vis.svg.append("text")
             .attr("class", "y-axis-title")

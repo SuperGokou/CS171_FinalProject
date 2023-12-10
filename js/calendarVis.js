@@ -45,7 +45,6 @@ class CalendarVis {
     }
 
 
-
     drawKey() {
         let vis = this;
         const keyData = [0, 1, 2, 3]
@@ -123,6 +122,7 @@ class CalendarVis {
 
         vis.updateCalendarVis();
     }
+
     checkFilters(d) {
         let vis = this;
 
@@ -190,7 +190,7 @@ class CalendarVis {
                 victimList += `</ul>`
                 html += victimList
 
-                console.log(d)
+                // console.log(d)
 
                 vis.tooltip
                     .html(html)

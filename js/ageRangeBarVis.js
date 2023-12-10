@@ -1,9 +1,11 @@
 class ageRangeBarVis {
 
-    constructor(parentElement, usaShootingData) {
+    constructor(parentElement, usaShootingData, selectedYear, filters) {
         this.parentElement = parentElement;
         this.data = usaShootingData;
         this.displayData = usaShootingData;
+        this.selectedYear = selectedYear;
+        this.filters = filters;
         this.initVis();
     }
 
@@ -20,6 +22,14 @@ class ageRangeBarVis {
             .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
             .append("g")
             .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
+
+        vis.title = vis.svg.append("text")
+            .attr("x", vis.width / 2)
+            .attr("y", vis.margin.top / 5)
+            .attr("text-anchor", "middle")
+            .style("font-size", "22px")
+            .style("fill", "white")
+            .text(`Age Range for Fatal Police Shootings in ` + vis.selectedYear);
 
         vis.y = d3.scaleBand()
             .rangeRound([0, vis.height])
@@ -42,13 +52,13 @@ class ageRangeBarVis {
         vis.wrangleData();
     }
 
-    wrangleData(selectedYear) {
+    wrangleData() {
         let vis = this;
 
         vis.selectedYear = selectedYear ? selectedYear : vis.selectedYear;
 
         let filteredData = vis.displayData.filter(d => {
-            return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear);
+            return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear) && vis.checkFilters(d)
         });
 
         let ShootingData = Array.from(d3.group(filteredData, d => d.age), ([key, value]) => ({key, value}))
@@ -86,6 +96,36 @@ class ageRangeBarVis {
         delete vis.groupedData["NaN-NaN"];
 
         vis.updateVis();
+    }
+
+    checkFilters(d) {
+        let vis = this;
+
+        for (const category in vis.filters) {
+            for (const filter in vis.filters[category]) {
+                switch (filter) {
+
+                    // Only filter out hispanic black people if both filters are off
+                    case "Black":
+                    case "Hispanic":
+                        if (!vis.filters['race']['Black'] &&
+                            !vis.filters['race']['Hispanic'] &&
+                            d[category] == "Black,Hispanic") {
+                            return false;
+                        } else if (!vis.filters[category][filter] && d[category] == filter) {
+                            return false;
+                        }
+                        break;
+
+                    default:
+                        if ((!vis.filters[category][filter] && d[category] == filter)) {
+                            return false;
+                        }
+                }
+
+            }
+        }
+        return true;
     }
 
     updateVis() {
@@ -148,7 +188,14 @@ class ageRangeBarVis {
             .text(d => d.count)
             .attr("fill", "white");
         labels.exit().remove();
-
     }
 
+    redrewAgeRangeBarVis(selectedYear, filters) {
+        let vis = this;
+        vis.selectedYear = selectedYear;
+        vis.filters = filters;
+        vis.title.text(`Age Range for Fatal Police Shootings in ` + selectedYear);
+
+        vis.wrangleData();
+    }
 }
