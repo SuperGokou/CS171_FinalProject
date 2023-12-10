@@ -90,7 +90,7 @@ function initMainPage(dataArray) {
 function temporalChartSelect() {
 
     selectedYear = this.value === 'all' ? 0 : +this.value; // Convert 'all' to 0, otherwise use the numeric value
-    console.log(selectedYear)
+
     myMapVis.redrawMavis(selectedYear, filters.temporal)
     barChart.redrawdripbarchart(selectedYear, filters.temporal);
 
@@ -105,6 +105,7 @@ function temporalChartSelect() {
         document.getElementById('dripvisVictimsYearSelect').value = selectedYear;
         document.getElementById('mapvisVictimsYearSelect').value = selectedYear;
     }else {
+
         document.getElementById('dripvisVictimsYearSelect').value = selectedYear;
         document.getElementById('mapvisVictimsYearSelect').value = selectedYear;
     }

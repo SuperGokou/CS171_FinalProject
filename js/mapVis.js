@@ -237,6 +237,7 @@ class MapVis {
                         ? pageY - margin - tooltipHeight
                         : pageY + margin;
 
+                    console.log(stateInfo)
                     vis.tooltip
                         .html(`
                          <div class="tooltip-content">
@@ -253,37 +254,37 @@ class MapVis {
                                     <tr>
                                         <th>Total</th>
                                         <td>${stateInfo.CaseSum}</td>
-                                        <td>${vis.formatRate(stateInfo.rateSum)}</td>
+                                        <td>${vis.formatRate(stateInfo.CaseSum/stateInfo.CaseSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>Black</th>
                                         <td>${stateInfo.blackSum}</td>
-                                        <td>${vis.formatRate(stateInfo.blackRate)}</td>
+                                        <td>${vis.formatRate(stateInfo.blackSum/stateInfo.CaseSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>Hispanic</th>
                                         <td>${stateInfo.hispanicSum}</td>
-                                        <td>${vis.formatRate(stateInfo.hispanicRate)}</td>
+                                        <td>${vis.formatRate(stateInfo.hispanicSum/stateInfo.CaseSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>White</th>
                                         <td>${stateInfo.whiteSum}</td>
-                                        <td>${vis.formatRate(stateInfo.whiteRate)}</td>
+                                        <td>${vis.formatRate(stateInfo.whiteSum/stateInfo.CaseSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>Asian</th>
                                         <td>${stateInfo.asianSum}</td>
-                                        <td>${vis.formatRate(stateInfo.asianRate)}</td>
+                                        <td>${vis.formatRate(stateInfo.asianSum/stateInfo.CaseSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>Indigenous</th>
                                         <td>${stateInfo.nativeAmericanSum}</td>
-                                        <td>${vis.formatRate(stateInfo.nativeAmericanRate)}</td>
+                                        <td>${vis.formatRate(stateInfo.nativeAmericanSum/stateInfo.CaseSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>Other</th>
                                         <td>${stateInfo.otherRaceSum}</td>
-                                        <td>${vis.formatRate(stateInfo.otherRaceRate)}</td>
+                                        <td>${vis.formatRate(stateInfo.otherRaceSum/stateInfo.CaseSum)}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -310,7 +311,7 @@ class MapVis {
     }
 
     formatRate(rate) {
-        return rate ? rate.toFixed(2) + "per million" : "N/A";
+        return rate ? rate.toFixed(2) + "  /Million" : "N/A";
     }
     redrawMavis(selectedYear, filters) {
         let vis = this;
