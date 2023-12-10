@@ -99,17 +99,14 @@ function temporalChartSelect() {
         calendarVis.redrawCalendar(selectedYear, filters.temporal);
         monthlyVictimsLineChart.selectedYear = selectedYear;
         monthlyVictimsLineChart.wrangleData();
-
         document.getElementById('calendarYearSelect').value = selectedYear;
         document.getElementById('monthlyVictimsYearSelect').value = selectedYear;
-        document.getElementById('dripvisVictimsYearSelect').value = selectedYear;
-        document.getElementById('mapvisVictimsYearSelect').value = selectedYear;
+        document.getElementById('dripVictimsYearSelect').value = selectedYear;
+        document.getElementById('mapVictimsYearSelect').value = selectedYear;
     }else {
-
-        document.getElementById('dripvisVictimsYearSelect').value = selectedYear;
-        document.getElementById('mapvisVictimsYearSelect').value = selectedYear;
+        document.getElementById('dripVictimsYearSelect').value = 'all';
+        document.getElementById('mapVictimsYearSelect').value = 'all';
     }
-
 }
 
 function filterChart() {
