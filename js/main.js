@@ -60,7 +60,7 @@ function initMainPage(dataArray) {
     animatedBarChart = new AnimatedBarChart('yearRaceDiv');
 
     // Draw bar chart
-    let barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
+    dripBarChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
 
     // Event listener for year selection on temporal charts
     document.getElementById('calendarYearSelect').addEventListener('change', temporalChartSelect);
@@ -79,7 +79,8 @@ function initMainPage(dataArray) {
     // Show sections
     showSections();
 
-    // Lazy load video game
+    // Lazy load blood drip chart & video game
+    lazyLoadBloodDrip();
     lazyLoadVideoGame();
 }
 
@@ -137,10 +138,9 @@ function lazyLoadVideoGame() {
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: [0.5] }); // Adjust threshold as needed
+    }, { threshold: [0.5] });
 
     let gameDiv = document.getElementById('gameDiv');
-    observer.observe(gameDiv);
 
     // Check if document is already loaded
     if (document.readyState === 'loading') {
@@ -150,8 +150,29 @@ function lazyLoadVideoGame() {
     } else {
         // Document is already loaded, observe immediately
         observer.observe(gameDiv);
-        console.log('HIII')
     }
 }
 
-// BArs are fixed, neeed to fix color coding on the race chart
+function lazyLoadBloodDrip() {
+    let dripping = false;
+
+    let observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !dripping) {
+                dripping = true;
+                dripBarChart.dripBlood();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: [0.5] });
+
+    let dripChartDiv = document.getElementById('section1');
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            observer.observe(dripChartDiv);
+        });
+    } else {
+        observer.observe(dripChartDiv);
+    }
+}

@@ -298,10 +298,29 @@ h1 {
 .tooltip {
     transition: opacity 0.5s ease-in-out;
     opacity: 0; /* Initially hidden */
+    text-align: center;
 }
 
 .tooltip-show {
     opacity: 1;
+}
+
+.tooltip-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.9em; /* Adjust the font size as needed */
+}
+
+.tooltip-table th,
+.tooltip-table td {
+    border: 1px solid #ddd;
+    padding: 4px;
+    text-align: left;
+}
+
+.tooltip-table th, .tooltip-name {
+    background-color: #868686;
+    font-weight: bold;
 }
 
 /* Legend Pop-In Animation */
