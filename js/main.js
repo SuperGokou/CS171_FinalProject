@@ -55,7 +55,7 @@ function initMainPage(dataArray) {
     monthlyVictimsLineChart = new MonthlyVictimsLineChart('monthlyVictimsDiv', dataArray[1], selectedYear, filters.temporal);
 
     // Draw map vis
-    myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
+    myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1], selectedYear, filters.temporal);
 
     yearRaceVis = new YearRaceVis("yearRaceDiv", dataArray[1]);
 
@@ -63,7 +63,7 @@ function initMainPage(dataArray) {
     let barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
 
     //draw age range bar
-    myageRangeBarVis = new ageRangeBarVis('ageRangeBarDiv', dataArray[1]);
+    myageRangeBarVis = new ageRangeBarVis('ageRangeBarDiv', dataArray[1], selectedYear, filters.temporal);
 
     // Event listener for year selection on temporal charts
     document.getElementById('calendarYearSelect').addEventListener('change', temporalChartSelect);
@@ -87,6 +87,8 @@ function temporalChartSelect() {
     calendarVis.redrawCalendar(selectedYear, filters.temporal);
     monthlyVictimsLineChart.selectedYear = selectedYear;
     monthlyVictimsLineChart.wrangleData();
+    myMapVis.redrawMavis(selectedYear, filters.temporal)
+    myageRangeBarVis.redrewAgeRangeBarVis(selectedYear, filters.temporal)
 
     // Ensure both temporal chart select boxes have the same value
     document.getElementById('calendarYearSelect').value = selectedYear;
@@ -105,6 +107,9 @@ function filterChart() {
             calendarVis.redrawCalendar(selectedYear, filters.temporal);
             monthlyVictimsLineChart.filters = filters.temporal;
             monthlyVictimsLineChart.wrangleData();
+            myMapVis.redrawMavis(selectedYear, filters.temporal)
+            myageRangeBarVis.redrewAgeRangeBarVis(selectedYear, filters.temporal)
+
             break;
     }
 }

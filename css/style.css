@@ -315,3 +315,9 @@ h1 {
     opacity: 1;
     transform: translateX(0);
 }
+
+#stickyDiv {
+    position: fixed;
+    bottom: -30px;
+    z-index: 1000;
+}

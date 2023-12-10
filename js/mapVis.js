@@ -1,14 +1,15 @@
 class MapVis {
-    constructor(parentElement, geoData, usaShootingData) {
+    constructor(parentElement, geoData, usaShootingData, selectedYear, filters) {
         this.parentElement = parentElement;
         this.usaShootingData = usaShootingData;
+        this.selectedYear = selectedYear;
         this.geoData = geoData;
+        this.filters = filters;
         this.initVis();
     }
 
     initVis() {
         let vis = this;
-        vis.selectedYear = 2022;
 
         vis.margin = {top: 10, right: 60, bottom: 10, left: 60};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
@@ -73,19 +74,18 @@ class MapVis {
         vis.wrangleData();
     }
 
-    wrangleData(selectedYear) {
+    wrangleData() {
         let vis = this;
 
-        vis.selectedYear = selectedYear ? selectedYear : vis.selectedYear;
-
-
-        let filteredData = vis.usaShootingData.filter(d => {
-            return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear);
+        this.filteredData = vis.usaShootingData.filter(d => {
+            return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear) && vis.checkFilters(d);
         });
 
 
+        console.log('map-filteredData', vis.filteredData);
+
         // prepare covid data by grouping all rows by state
-        let ShootingData = Array.from(d3.group(filteredData, d => d.state), ([key, value]) => ({key, value}))
+        let ShootingData = Array.from(d3.group(vis.filteredData, d => d.state), ([key, value]) => ({key, value}))
 
         // init final data structure in which both data sets will be merged into
         vis.stateInfo = []
@@ -127,12 +127,39 @@ class MapVis {
             )
         })
 
-        console.log('final data structure for mapVis', vis.stateInfo);
+        // console.log('final data structure for mapVis', vis.stateInfo);
 
         vis.colorScale.domain([0, d3.max(vis.stateInfo, d => d.year === vis.selectedYear ? d.CaseSum : 0)]);
         vis.legendScale.domain([0, d3.max(vis.stateInfo, d => d.year === vis.selectedYear ? d.CaseSum : 0)]);
 
         vis.updateVis();
+    }
+
+    checkFilters(d) {
+        let vis = this;
+
+        for (const category in vis.filters) {
+            for (const filter in vis.filters[category]) {
+                switch (filter) {
+                    // Only filter out hispanic black people if both filters are off
+                    case "Black":
+                    case "Hispanic":
+                        if (!vis.filters['race']['Black'] &&
+                            !vis.filters['race']['Hispanic'] &&
+                            d[category] == "Black,Hispanic") {
+                            return false;
+                        } else if (!vis.filters[category][filter] && d[category] == filter) {
+                            return false;
+                        }
+                        break;
+                    default:
+                        if ((!vis.filters[category][filter] && d[category] == filter)) {
+                            return false;
+                        }
+                }
+            }
+        }
+        return true;
     }
 
     updateVis() {
@@ -230,6 +257,13 @@ class MapVis {
                     .style("top", 0)
                     .html(``);
             });
+    }
+
+    redrawMavis(selectedYear, filters) {
+        let vis = this;
+        vis.selectedYear = selectedYear;
+        vis.filters = filters;
+        vis.wrangleData();
     }
 
 }
