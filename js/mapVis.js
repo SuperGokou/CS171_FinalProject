@@ -11,7 +11,7 @@ class MapVis {
     initVis() {
         let vis = this;
 
-        vis.margin = {top: 80, right: 60, bottom: 80, left: 60};
+        vis.margin = {top: 60, right: 20, bottom: 60, left: 20};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
 
@@ -23,7 +23,7 @@ class MapVis {
         // Add a title to the chart
         vis.title = vis.svg.append("text")
             .attr("x", vis.width / 2)
-            .attr("y", vis.margin.top / 5)
+            .attr("y", vis.margin.top / 4)
             .attr("text-anchor", "middle")
             .style("font-size", "18px")
             .style("fill", "white")
