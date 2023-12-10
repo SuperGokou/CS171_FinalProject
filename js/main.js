@@ -63,7 +63,7 @@ function initMainPage(dataArray) {
     let barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
 
     //draw age range bar
-    myageRangeBarVis = new ageRangeBarVis('ageRangeBarDiv', dataArray[1], selectedYear, filters.temporal);
+    // myageRangeBarVis = new ageRangeBarVis('ageRangeBarDiv', dataArray[1], selectedYear, filters.temporal);
 
     // Event listener for year selection on temporal charts
     document.getElementById('calendarYearSelect').addEventListener('change', temporalChartSelect);

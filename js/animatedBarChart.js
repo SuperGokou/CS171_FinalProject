@@ -15,14 +15,14 @@ class AnimatedBarChart {
     initVis() {
         let vis = this;
 
-        vis.margin = {top: 20, right: 20, bottom: 30, left: 70};
+        vis.margin = {top: 50, right: 20, bottom: 50, left: 70};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.top - vis.margin.bottom; // Will need to offset height for title
+        vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom - document.getElementById("animatedBarChartButton").offsetHeight; // Will need to offset height for title
 
         // Create svg
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
             .attr("width", vis.width + vis.margin.left + vis.margin.right)
-            .attr("height", vis.height + vis.margin.top + vis.margin.bottom) // Will need to offset height for title
+            .attr("height", vis.height + vis.margin.top + vis.margin.bottom - document.getElementById("dailyVictimsTitle").offsetHeight) // Will need to offset height for title
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
         // X Scale
@@ -33,10 +33,6 @@ class AnimatedBarChart {
 
         vis.xRate = d3.scaleLinear()
             .range([0, vis.xCount.bandwidth()])
-            .domain([0, d3.max(vis.data, d => d.population)]);
-
-        vis.widthScale = d3.scaleLinear()
-            .range([0, vis.width])
             .domain([0, d3.max(vis.data, d => d.population)]);
 
         // Y Scale for count
@@ -82,7 +78,7 @@ class AnimatedBarChart {
             .attr("class", "y-axis-label")
             .attr("transform", "rotate(-90)")
             .attr("y", 0)
-            .attr("x", 0 - vis.width / 2)
+            .attr("x", 0 - vis.height / 2)
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text('Mean Annual Number of Victims')
