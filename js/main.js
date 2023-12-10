@@ -72,6 +72,7 @@ function initMainPage(dataArray) {
     });
 
     document.getElementById('animatedBarChartSelect').addEventListener('change', function() {
+        animatedBarChart.displayMode = this.value;
         animatedBarChart.updateVis();
     })
 
