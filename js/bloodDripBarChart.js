@@ -84,25 +84,13 @@ class BloodDripBarChart {
             .attr("transform", `translate(${vis.width / 2}, ${vis.margin.top - 60})`) // Adjust positioning
             .style("text-anchor", "middle")
             .style("font-size", "18px")
-            .text("Drip Bar Chart for State");
+            .text("Blood Spilt by Police by State");
 
         vis.svg.append("text")
             .attr("class", "y-axis-title")
             .attr("transform", `translate(${vis.margin.left - 30}, ${vis.height / 2}) rotate(-90)`) // Adjust positioning
             .style("text-anchor", "middle")
             .text(`Victims ${vis.perCapita ? "(per million)" : "(total)"}`);
-
-        // Initialize drawing interval
-        d3.interval(
-            () => {
-                if (vis.currentDate < vis.endDate) {
-                    vis.wrangleData()
-                    vis.currentDate.setDate(vis.currentDate.getDate() + 1)
-                } else {
-                    this.stop;
-                }
-            },
-        )
     }
 
     wrangleData() {
@@ -129,6 +117,22 @@ class BloodDripBarChart {
         statesToUpdate.forEach(state => {
             vis.drawBloodSpilt(state);
         })
+    }
+
+    dripBlood() {
+        let vis = this;
+
+        // Initialize drawing interval
+        d3.interval(
+            () => {
+                if (vis.currentDate < vis.endDate) {
+                    vis.wrangleData()
+                    vis.currentDate.setDate(vis.currentDate.getDate() + 1)
+                } else {
+                    this.stop;
+                }
+            },
+        )
     }
 
     drawBloodSpilt(state) {
