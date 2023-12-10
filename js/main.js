@@ -57,7 +57,7 @@ function initMainPage(dataArray) {
     // Draw map vis
     myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
 
-    yearRaceVis = new YearRaceVis("yearRaceDiv", dataArray[1]);
+    animatedBarChart = new AnimatedBarChart('yearRaceDiv');
 
     // Draw bar chart
     let barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
@@ -71,8 +71,14 @@ function initMainPage(dataArray) {
 
     // Event listener for gender / racial / armed status filters
     document.querySelectorAll('.btn-group .btn').forEach(btn => {
-       btn.addEventListener('click', filterChart)
+        btn.addEventListener('click', filterChart)
     });
+
+    document.getElementById('animatedBarChartButton').addEventListener('click', function() {
+        animatedBarChart.updateVis();
+        document.getElementById('animatedBarChartButton').textContent =
+            "Switch to " + (animatedBarChart.displayMode == 'count' ? 'Victim Rate' : ' Victim Count');
+    })
 
     // Show sections
     showSections();

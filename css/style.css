@@ -282,6 +282,12 @@ h1 {
     height: 62px;
 }
 
+#animatedBarChartButton {
+    background-color: #d1d3d5 !important; /* Light grey */
+    border-color: #ced4da !important; /* Slightly darker grey border */
+    color: #6c757d;
+}
+
 
 
 /* Bar Entrance Animation */
