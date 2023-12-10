@@ -92,6 +92,7 @@ p {
 /* Explanation style */
 .explanation {
     background-color: rgba(249, 249, 249, 0.5); /* Light background for the text */
+    backdrop-filter: blur(2px);
     color: #333; /* Dark text color for readability */
     padding: 4vh 2vw; /* Adequate padding around the text */
     font-size: 1.2em; /* Slightly larger font size */

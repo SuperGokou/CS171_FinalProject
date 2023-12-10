@@ -2,10 +2,10 @@ class AnimatedBarChart {
     constructor(parentElement) {
         this.parentElement = parentElement;
         this.data = [
-            {demographic: 'Black', count: 2091, rate: 5.9, population: 40e6 },
-            {demographic: 'Hispanic', count: 1370, rate: 2.5, population: 62e6 },
-            {demographic: 'White', count: 3944, rate: 2.3, population: 192e6 },
-            {demographic: 'Other', count: 293, rate: 0.9, population: 38e6 },
+            {demographic: 'Black', count: 232.33, rate: 5.81, population: 40e6 },
+            {demographic: 'Hispanic', count: 152.22, rate: 2.46, population: 62e6 },
+            {demographic: 'White', count: 438.22, rate: 2.28, population: 192e6 },
+            {demographic: 'Other', count: 32.56, rate: 0.857, population: 38e6 },
         ]
 
         this.initVis();
@@ -99,10 +99,10 @@ class AnimatedBarChart {
     updateVis() {
         switch (this.displayMode) {
             case 'count':
-                this.transitionToRate();
+                this.transitionToCount();
                 break;
             case 'rate':
-                this.transitionToCount();
+                this.transitionToRate();
                 break;
         }
     }
