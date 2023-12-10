@@ -112,45 +112,66 @@
 
         </div>
     </div>
-    <div class="snap-section paragraph">
+    <div class="snap-section paragraph" id="section1">
         <p class="explanation">
             Not only are these extrajudicial executions frequent, but they are pervasive—affecting the entire U.S.
-        </p>
-    </div>
-
-    <div class="snap-section" id="section1">
-        <div class="row d-flex justify-content-center visualization" style="height: 80vh">
-            <div class="col-6">
-                <div class="align-self-center rounded-div" id="mapDiv" style=" margin-top: 2vh; height: 85%"></div>
-            </div>
-            <div class="col-6">
-                <div class="align-self-center rounded-div" id="barChartDiv" style=" margin-top: 2vh; height: 85%"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="snap-section paragraph">
-        <p class="explanation">
-            But some demographics are more affected than others...
         </p>
     </div>
 
     <div class="snap-section" id="section2">
         <div class="row d-flex justify-content-center visualization" style="height: 80vh">
             <div class="col-6">
-                    <div class="align-self-center rounded-div" id="yearRaceDiv" style="height: 90%; width: 100%">
-                        <label class="visualization-title">Mean Annual <select class="select-box" id="animatedBarChartSelect">
-                            <option value="count" selected>Count</option>
-                            <option value="rate">Rate</option>
-                        </select> of Shooting Victims by Race</label>
-                    </div>
+                <div class="align-self-center rounded-div" id="mapDiv" style=" margin-top: 2vh; height: 85%">
+                    <label class="visualization-title" id="mapvisVictimsYearSelect">Fatal Police Shootings in <select class="select-box" id="mapVictimsYearSelect">
+                        <option value="2022" selected>2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                        <option value="all">All Years</option>
+                    </select></label></div>
+            </div>
+            <div class="col-6">
+                <div class="align-self-center rounded-div" id="barChartDiv" style=" margin-top: 2vh; height: 85%">
+                    <label class="visualization-title" id="dripvisVictimsYearSelect">Drip Bar for Each State in  <select class="select-box" id="dripVictimsYearSelect">
+                        <option value="2022" selected>2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                        <option value="all">All Years</option>
+                    </select></label></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="snap-section paragraph" id="section3">
+        <p class="explanation">
+            But some demographics are more affected than others...
+        </p>
+    </div>
+    <div class="snap-section" id="section4">
+        <div class="row d-flex justify-content-center visualization" style="height: 80vh">
+            <div class="col-6">
+                <div class="align-self-center rounded-div" id="yearRaceDiv" style="height: 90%; width: 100%">
+                    <label class="visualization-title">Mean Annual <select class="select-box" id="animatedBarChartSelect">
+                        <option value="count" selected>Count</option>
+                        <option value="rate">Rate</option>
+                    </select> of Shooting Victims by Race</label>
+                </div>
             </div>
         </div>
     </div>
     <div class="snap-section paragraph" id="gameExplanationDiv">
         <p class="explanation">
-            Although about twice as many white people are killed by police than black people annually on average,
-            the rate at which black people are killed by police relative to their population is over 2.5x higher than for white people.
+            As you've seen, although about twice as many white people are killed by police than white people annually on average,
+            the rate at which black people are killed by police relative to the population is over 2.55x higher than for white people.
             <br>
             <br>
             But seeing is one thing, and experiencing is another. So, we've created a game to help you understand the difference.
@@ -194,5 +215,4 @@
 <script src="js/stickToChart.js"></script>
 </body>
 </html>
-
 

@@ -20,15 +20,6 @@ class MapVis {
             .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
-        // Add a title to the chart
-        vis.title = vis.svg.append("text")
-            .attr("x", vis.width / 2)
-            .attr("y", vis.margin.top / 4)
-            .attr("text-anchor", "middle")
-            .style("font-size", "18px")
-            .style("fill", "white")
-            .text(`Map for Fatal Police Shootings in ` + vis.selectedYear);
-
         // Initialize tooltip
         vis.tooltip = d3.select("body").append('div')
             .attr('class', "tooltip")
@@ -87,18 +78,21 @@ class MapVis {
         let vis = this;
 
         this.filteredData = vis.usaShootingData.filter(d => {
-            return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear) && vis.checkFilters(d);
+            if (vis.selectedYear === 0) {
+                return vis.usaShootingData && vis.checkFilters(d);
+            }else{
+                return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear) && vis.checkFilters(d);
+            }
         });
 
-
         // prepare covid data by grouping all rows by state
-        let ShootingData = Array.from(d3.group(vis.filteredData, d => d.state), ([key, value]) => ({key, value}))
+        this.ShootingData = Array.from(d3.group(vis.filteredData, d => d.state), ([key, value]) => ({key, value}))
 
         // init final data structure in which both data sets will be merged into
         vis.stateInfo = []
 
         // merge
-        ShootingData.forEach(state => {
+        vis.ShootingData.forEach(state => {
             // init counters
             let CasesSum = 0;
             let blackSum = 0;
@@ -322,7 +316,7 @@ class MapVis {
         let vis = this;
         vis.selectedYear = selectedYear;
         vis.filters = filters;
-        vis.title.text("Map for Fatal Police Shootings in: " + selectedYear);
+        // vis.title.text("Map for Fatal Police Shootings in: " + selectedYear);
         vis.wrangleData();
     }
 

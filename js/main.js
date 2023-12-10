@@ -57,14 +57,18 @@ function initMainPage(dataArray) {
     // Draw map vis
     myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1], selectedYear, filters.temporal);
 
+
+
     animatedBarChart = new AnimatedBarChart('yearRaceDiv');
 
     // Draw bar chart
-    dripBarChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
+    barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true, selectedYear, filters.temporal);
 
     // Event listener for year selection on temporal charts
     document.getElementById('calendarYearSelect').addEventListener('change', temporalChartSelect);
     document.getElementById('monthlyVictimsYearSelect').addEventListener('change', temporalChartSelect);
+    document.getElementById('mapVictimsYearSelect').addEventListener('change', temporalChartSelect);
+    document.getElementById('dripVictimsYearSelect').addEventListener('change', temporalChartSelect);
 
     // Event listener for gender / racial / armed status filters
     document.querySelectorAll('.btn-group .btn').forEach(btn => {
@@ -79,22 +83,32 @@ function initMainPage(dataArray) {
     // Show sections
     showSections();
 
-    // Lazy load blood drip chart & video game
-    lazyLoadBloodDrip();
+    // Lazy load video game
     lazyLoadVideoGame();
 }
 
 function temporalChartSelect() {
-    selectedYear = +this.value;
 
-    calendarVis.redrawCalendar(selectedYear, filters.temporal);
-    monthlyVictimsLineChart.selectedYear = selectedYear;
-    monthlyVictimsLineChart.wrangleData();
+    selectedYear = this.value === 'all' ? 0 : +this.value; // Convert 'all' to 0, otherwise use the numeric value
+    console.log(selectedYear)
     myMapVis.redrawMavis(selectedYear, filters.temporal)
+    barChart.redrawdripbarchart(selectedYear, filters.temporal);
 
     // Ensure both temporal chart select boxes have the same value
-    document.getElementById('calendarYearSelect').value = selectedYear;
-    document.getElementById('monthlyVictimsYearSelect').value = selectedYear;
+    if(selectedYear !== 0) {
+        calendarVis.redrawCalendar(selectedYear, filters.temporal);
+        monthlyVictimsLineChart.selectedYear = selectedYear;
+        monthlyVictimsLineChart.wrangleData();
+
+        document.getElementById('calendarYearSelect').value = selectedYear;
+        document.getElementById('monthlyVictimsYearSelect').value = selectedYear;
+        document.getElementById('dripvisVictimsYearSelect').value = selectedYear;
+        document.getElementById('mapvisVictimsYearSelect').value = selectedYear;
+    }else {
+        document.getElementById('dripvisVictimsYearSelect').value = selectedYear;
+        document.getElementById('mapvisVictimsYearSelect').value = selectedYear;
+    }
+
 }
 
 function filterChart() {
@@ -109,6 +123,7 @@ function filterChart() {
             monthlyVictimsLineChart.filters = filters.temporal;
             monthlyVictimsLineChart.wrangleData();
             myMapVis.redrawMavis(selectedYear, filters.temporal)
+            barChart.redrawdripbarchart(selectedYear, filters.temporal);
 
             break;
     }
@@ -138,9 +153,10 @@ function lazyLoadVideoGame() {
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: [0.5] });
+    }, { threshold: [0.5] }); // Adjust threshold as needed
 
     let gameDiv = document.getElementById('gameDiv');
+    observer.observe(gameDiv);
 
     // Check if document is already loaded
     if (document.readyState === 'loading') {
@@ -150,29 +166,6 @@ function lazyLoadVideoGame() {
     } else {
         // Document is already loaded, observe immediately
         observer.observe(gameDiv);
-    }
-}
-
-function lazyLoadBloodDrip() {
-    let dripping = false;
-
-    let observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !dripping) {
-                dripping = true;
-                dripBarChart.dripBlood();
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: [0.5] });
-
-    let dripChartDiv = document.getElementById('section1');
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            observer.observe(dripChartDiv);
-        });
-    } else {
-        observer.observe(dripChartDiv);
+        console.log('HIII')
     }
 }

@@ -1,9 +1,10 @@
 class BloodDripBarChart {
-    constructor(parentElement, victimData, perCapita) {
+    constructor(parentElement, victimData, perCapita, selectedYear, filters) {
         this.parentElement = parentElement;
         this.victimData = victimData;
         this.perCapita = perCapita;
-
+        this.selectedYear = +selectedYear;
+        this.filters = filters;
         this.states = [
             'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL',
             'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE',
@@ -25,9 +26,8 @@ class BloodDripBarChart {
             this.shootings_by_state[state] = 0;
         })
 
-        this.currentDate = new Date(2015, 0, 1);
-        this.endDate = new Date(2022, 11, 31);
-
+        this.currentDate = new Date(this.selectedYear, 0, 1);
+        this.endDate = new Date(this.selectedYear, 11, 31);
 
         this.initVis();
     }
@@ -36,9 +36,14 @@ class BloodDripBarChart {
         let vis= this;
 
         // Create svg element
-        vis.margin = {top: 80, right: 20, bottom: 80, left: 40};
+        vis.margin = {top: 30, right: 20, bottom: 90, left: 40};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
+
+        // Check if SVG already exists. If yes, remove it
+        if(d3.select("#" + vis.parentElement).select("svg").empty() === false) {
+            d3.select("#" + vis.parentElement).select("svg").remove();
+        }
 
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
             .attr("width", vis.width + vis.margin.left + vis.margin.right)
@@ -79,25 +84,38 @@ class BloodDripBarChart {
             .style("fill", "#ffffff");
 
         // Axis titles
-        vis.svg.append("text")
-            .attr("class", "x-axis-title")
-            .attr("transform", `translate(${vis.width / 2}, ${vis.margin.top - 60})`) // Adjust positioning
-            .style("text-anchor", "middle")
-            .style("font-size", "18px")
-            .text("Blood Spilt by Police by State");
+        // vis.svg.append("text")
+        //     .attr("class", "x-axis-title")
+        //     .attr("transform", `translate(${vis.width / 2}, ${vis.margin.top - 60})`) // Adjust positioning
+        //     .style("text-anchor", "middle")
+        //     .style("font-size", "18px")
+        //     .text("Drip Bar Chart for State");
 
         vis.svg.append("text")
             .attr("class", "y-axis-title")
             .attr("transform", `translate(${vis.margin.left - 30}, ${vis.height / 2}) rotate(-90)`) // Adjust positioning
             .style("text-anchor", "middle")
             .text(`Victims ${vis.perCapita ? "(per million)" : "(total)"}`);
+
+
+        // Initialize drawing interval
+        d3.interval(
+            () => {
+                if (vis.currentDate < vis.endDate) {
+                    vis.wrangleData()
+                    vis.currentDate.setDate(vis.currentDate.getDate() + 1)
+                } else {
+                    this.stop;
+                }
+            },
+        )
     }
 
     wrangleData() {
         let vis = this;
 
         // Get data for current date's shootings
-        const shootingsToday = vis.victimData.filter(d => d.date === vis.formatDate(vis.currentDate));
+        const shootingsToday = vis.victimData.filter(d => d.date === vis.formatDate(vis.currentDate) && vis.checkFilters(d));
 
         let statesToUpdate = []
         shootingsToday.forEach(shooting => {
@@ -119,20 +137,34 @@ class BloodDripBarChart {
         })
     }
 
-    dripBlood() {
+    checkFilters(d) {
         let vis = this;
 
-        // Initialize drawing interval
-        d3.interval(
-            () => {
-                if (vis.currentDate < vis.endDate) {
-                    vis.wrangleData()
-                    vis.currentDate.setDate(vis.currentDate.getDate() + 1)
-                } else {
-                    this.stop;
+        for (const category in vis.filters) {
+            for (const filter in vis.filters[category]) {
+                switch (filter) {
+
+                    // Only filter out hispanic black people if both filters are off
+                    case "Black":
+                    case "Hispanic":
+                        if (!vis.filters['race']['Black'] &&
+                            !vis.filters['race']['Hispanic'] &&
+                            d[category] == "Black,Hispanic") {
+                            return false;
+                        } else if (!vis.filters[category][filter] && d[category] == filter) {
+                            return false;
+                        }
+                        break;
+
+                    default:
+                        if ((!vis.filters[category][filter] && d[category] == filter)) {
+                            return false;
+                        }
                 }
-            },
-        )
+
+            }
+        }
+        return true;
     }
 
     drawBloodSpilt(state) {
@@ -173,4 +205,28 @@ class BloodDripBarChart {
 
         return `${year}-${month}-${day}`;
     }
+
+    redrawdripbarchart(selectedYear, filters){
+        let vis = this;
+        vis.selectedYear = selectedYear;
+        vis.filters = filters;
+
+        vis.svg.selectAll("*").remove();
+
+        // Reset the currentDate and endDate based on the selected year
+        if (vis.selectedYear === 0) {
+            vis.currentDate = new Date(2015, 0, 1);
+            vis.endDate = new Date(2022, 11, 31);
+        }else{
+            vis.currentDate = new Date(vis.selectedYear, 0, 1);
+            vis.endDate = new Date(vis.selectedYear, 11, 31);
+        }
+        // Reset the shootings data for the new year
+        vis.states.forEach(state => {
+            vis.shootings_by_state[state] = 0;
+        });
+
+        vis.initVis();
+    }
+
 }
