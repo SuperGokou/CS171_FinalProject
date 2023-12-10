@@ -1,8 +1,9 @@
 class MonthlyVictimsLineChart {
-    constructor(parentElement, victimData, selectedYear) {
+    constructor(parentElement, victimData, selectedYear, filters) {
         this.parentElement = parentElement;
-        this.victimData = victimData;
+        this.data = victimData;
         this.selectedYear = +selectedYear;
+        this.filters = filters;
 
         this.initVis();
     }
@@ -11,13 +12,15 @@ class MonthlyVictimsLineChart {
         let vis = this;
 
         // Create svg element
-        vis.margin = {top: 20, right: 20, bottom: 20, left: 40};
+        vis.margin = {top: 20, right: 40, bottom: 90, left: 50};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
+        vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom - document.getElementById("monthlyVictimsTitle").offsetHeight;
+
+        console.log(document.getElementById("monthlyVictimsTitle").getBoundingClientRect().height)
 
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
             .attr("width", vis.width + vis.margin.left + vis.margin.right)
-            .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+            .attr("height", vis.height + vis.margin.top + vis.margin.bottom + document.getElementById("monthlyVictimsTitle").offsetHeight)
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
         // Create a div for the tooltip and hide it initially
@@ -37,7 +40,7 @@ class MonthlyVictimsLineChart {
             .padding(0.1);
 
         vis.yScale = d3.scaleLinear()
-            .domain([30, 120])
+            .domain([0, 120])
             .range([vis.height, vis.margin.top]);
 
         // X Axis
@@ -55,7 +58,7 @@ class MonthlyVictimsLineChart {
         // X axis Title
         vis.svg.append("text")
             .attr("class", "x-axis-title")
-            .attr("transform", `translate(${vis.width / 2}, ${vis.height + 35})`) // Adjust positioning
+            .attr("transform", `translate(${vis.width / 2}, ${vis.height + 40 })`) // Adjust positioning
             .style("text-anchor", "middle")
             .text("Month");
 
@@ -84,7 +87,49 @@ class MonthlyVictimsLineChart {
             .x(function(d, i) { return vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2; })
             .y(function(d) { return vis.yScale(d); });
 
-        this.wrangleData()
+        vis.wrangleData()
+        vis.drawLegend()
+    }
+
+    drawLegend() {
+        let vis = this;
+
+        let legend = vis.svg.append("g")
+            .attr("class", "legend-linechart")
+            .attr("transform", `translate(${vis.width - 100}, 0)`);
+
+
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("fill", "#fd3434");
+
+        legend.append("text")
+            .attr("x", 30)
+            .attr("y", 15)
+            .attr("fill", "#ffffff")
+            .text(`${vis.selectedYear}`);
+
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("y", 30)
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("fill", "rgb(128,40,40)");
+
+        legend.append("text")
+            .attr("x", 30)
+            .attr("y", 45)
+            .attr("fill", "#ffffff")
+            .text("2015-2022");
+
+        legend.append("text")
+            .attr("x", 30)
+            .attr("y", 65)
+            .attr("fill", "#ffffff")
+            .text("Average");
     }
 
     wrangleData() {
@@ -96,7 +141,11 @@ class MonthlyVictimsLineChart {
             monthlyData[year] = Array(12).fill(0); // Initialize each month to 0
         });
 
-        vis.victimData.forEach(victim => {
+        vis.filteredData = vis.data.filter (d => {
+            return vis.checkFilters(d);
+        });
+
+        vis.filteredData.forEach(victim => {
             let date = new Date(victim.date);
             let year = date.getFullYear();
             let month = date.getMonth();
@@ -118,9 +167,42 @@ class MonthlyVictimsLineChart {
 
         monthlyData['avg'] = monthlyAverages;
 
-        vis.displayData = monthlyData;
+        vis.displayData = {
+            'selected': monthlyData[vis.selectedYear],
+            'avg': monthlyData['avg']
+        };
 
         vis.updateVis();
+    }
+
+    checkFilters(d) {
+        let vis = this;
+
+        for (const category in vis.filters) {
+            for (const filter in vis.filters[category]) {
+                switch (filter) {
+
+                    // Only filter out hispanic black people if both filters are off
+                    case "Black":
+                    case "Hispanic":
+                        if (!vis.filters['race']['Black'] &&
+                            !vis.filters['race']['Hispanic'] &&
+                            d[category] == "Black,Hispanic") {
+                            return false;
+                        } else if (!vis.filters[category][filter] && d[category] == filter) {
+                            return false;
+                        }
+                        break;
+
+                    default:
+                        if ((!vis.filters[category][filter] && d[category] == filter)) {
+                            return false;
+                        }
+                }
+
+            }
+        }
+        return true;
     }
 
     updateVis() {
@@ -137,41 +219,27 @@ class MonthlyVictimsLineChart {
                 .transition(1000)
                 .attr("d", vis.line)
                 .attr("fill", "none")
-                .attr("stroke", () => vis.selectedYear == year ? '#fd3434' :
-                    year == 'avg' ? 'rgb(128,40,40)' : '#5e5c5c')
-                .attr("stroke-width", year == vis.selectedYear ? 2 : 1.5);
+                .attr("stroke", () => year == 'avg' ? 'rgb(128,40,40)' : '#fd3434' )
 
 
             let isYearSelected = year == vis.selectedYear || year == 'avg';
             let vertices = vis.svg.selectAll(".vertex-" + year)
-                .data(isYearSelected ? vis.displayData[year] : [])
-
-            let textLabels = vis.svg.selectAll(".text-label-" + year)
-                .data(isYearSelected ? vis.displayData[year] : [])
-
-            textLabels.enter().append("text")
-                .attr("class", "text-label-" + year)
-                .merge(textLabels)
-                .attr("x", (d, i) => vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2)
-                .attr("y", d => vis.yScale(d) - 15) // Position above the vertex
-                .text(d => d) // The text to display
-                .attr("text-anchor", "middle")
-                .attr("fill", "#ffffff") // Text color
-                .style("font-size", "12px");
-
-            textLabels.exit().remove();
+                .data(vis.displayData[year]);
 
             vertices.enter().append("circle")
                 .attr("class", "vertex-" + year)
-                .attr("cx", (d, i) => vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2)
-                .attr("cy", (d) => vis.yScale(d))
-                .attr("r", 5)
                 .attr("fill", () => year == 'avg' ? 'rgb(128,40,40)' : '#fd3434')
+                .attr("r", 5)
                 .attr("stroke", () => year == 'avg' ? 'rgb(128,40,40)' : '#fd3434')
                 .attr("stroke-width", 1.5)
                 .attr("opacity", 0)
+                .attr("cx", (d, i) => vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2)
+                .attr("cy", (d) => vis.yScale(d))
+                .merge(vertices)
                 .transition()
                 .duration(1000)
+                .attr("cx", (d, i) => vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2)
+                .attr("cy", (d) => vis.yScale(d))
                 .attr("opacity", 1)
                 .each(function(d, i) {
                     d3.select(this).on("mouseover", (event) => {
@@ -185,7 +253,7 @@ class MonthlyVictimsLineChart {
 
                         vis.tooltip
                             .style("opacity", .9);
-                        vis.tooltip.html(d + " lives lost in " + monthName + (year == 'avg' ? " on average" : " " + year))
+                        vis.tooltip.html(d + " lives lost in " + monthName + (year == 'avg' ? " on average" : " " + vis.selectedYear))
                             .style("left", (event.pageX) + "px")
                             .style("top", (event.pageY - 28) + "px");
 

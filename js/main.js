@@ -1,10 +1,37 @@
 let selectedState = '';
 let selectedYear = 2022;
 
+let filters = {
+    "temporal" : {
+        "gender" : {
+            "male" : true,
+            "female" : true,
+            "non-binary" : true,
+            "unknown" : true
+        },
+        "race" : {
+            "Black" : true,
+            "White" : true,
+            "Hispanic" : true,
+            "Asian" : true,
+            "Native American" : true,
+            "Unknown" : true,
+            "Other" : true
+        },
+        "armed_status" : {
+            "armed" : true,
+            "unarmed" : true,
+            "unknown" : true
+        }
+    },
+    "geographical" : {
+    }
+}
+
 let promises = [
 
     d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-albers-10m.json"),
-    d3.csv("data/2023-11-03-washington-post-police-shootings-export.csv")
+    d3.csv("data/shootings_data_cleaned.csv")
 ];
 Promise.all(promises)
     .then(function (data) {
@@ -22,10 +49,10 @@ function initMainPage(dataArray) {
     background = new Background('names-background', dataArray[1]);
 
     // Draw calendar
-    calendarVis = new CalendarVis('calendarDiv', dataArray[1], selectedYear);
+    calendarVis = new CalendarVis('calendarDiv', dataArray[1], selectedYear, filters.temporal);
 
     // Draw monthly victims line chart
-    monthlyVictimsLineChart = new MonthlyVictimsLineChart('monthlyVictimsDiv', dataArray[1], selectedYear);
+    monthlyVictimsLineChart = new MonthlyVictimsLineChart('monthlyVictimsDiv', dataArray[1], selectedYear, filters.temporal);
 
     // Draw map vis
     myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1]);
@@ -38,16 +65,13 @@ function initMainPage(dataArray) {
     //draw age range bar
     myageRangeBarVis = new ageRangeBarVis('ageRangeBarDiv', dataArray[1]);
 
+    // Event listener for year selection on temporal charts
+    document.getElementById('calendarYearSelect').addEventListener('change', temporalChartSelect);
+    document.getElementById('monthlyVictimsYearSelect').addEventListener('change', temporalChartSelect);
 
-    // Event listener for year selection
-    document.getElementById('calendarYearSelect').addEventListener('change', function () {
-        selectedYear = +this.value;
-
-        calendarVis.redrawCalendar(selectedYear);
-        myMapVis.wrangleData(selectedYear);
-        monthlyVictimsLineChart.selectedYear = selectedYear;
-        monthlyVictimsLineChart.updateVis();
-        myageRangeBarVis.wrangleData(selectedYear);
+    // Event listener for gender / racial / armed status filters
+    document.querySelectorAll('.btn-group .btn').forEach(btn => {
+       btn.addEventListener('click', filterChart)
     });
 
     // Show sections
@@ -55,6 +79,34 @@ function initMainPage(dataArray) {
 
     // Lazy load video game
     lazyLoadVideoGame();
+}
+
+function temporalChartSelect() {
+    selectedYear = +this.value;
+
+    calendarVis.redrawCalendar(selectedYear, filters.temporal);
+    monthlyVictimsLineChart.selectedYear = selectedYear;
+    monthlyVictimsLineChart.wrangleData();
+
+    // Ensure both temporal chart select boxes have the same value
+    document.getElementById('calendarYearSelect').value = selectedYear;
+    document.getElementById('monthlyVictimsYearSelect').value = selectedYear;
+    // myageRangeBarVis.wrangleData(selectedYear);
+}
+
+function filterChart() {
+    this.classList.toggle('active');
+    switch (this.dataset.chart) {
+        case 'temporal':
+            filters.temporal[this.dataset.filtertype][this.dataset.filtervalue] =
+                !filters.temporal[this.dataset.filtertype][this.dataset.filtervalue];
+
+            console.log(filters.temporal)
+            calendarVis.redrawCalendar(selectedYear, filters.temporal);
+            monthlyVictimsLineChart.filters = filters.temporal;
+            monthlyVictimsLineChart.wrangleData();
+            break;
+    }
 }
 
 function showSections() {

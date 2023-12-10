@@ -21,23 +21,93 @@
         </p>
     </div>
     <div class="snap-section">
-        <div class = "row d-flex justify-content-center visualization">
-            <div class="col-6">
-                <div class="align-self-center" id="calendarDiv">
-                    <label id="calendarTitle">Daily Fatal Police Shootings in <select id="calendarYearSelect">
-                        <option value="2022" selected>2022</option>
-                        <option value="2021">2021</option>
-                        <option value="2020">2020</option>
-                        <option value="2019">2019</option>
-                        <option value="2018">2018</option>
-                        <option value="2017">2017</option>
-                        <option value="2016">2016</option>
-                        <option value="2015">2015</option>
-                    </select></label>
+        <div class="col">
+            <div class = "row d-flex justify-content-center visualization" style="height: 80vh">
+                <div class="col-6">
+                    <div class="align-self-center rounded-div" id="calendarDiv">
+                        <label class="visualization-title" id="dailyVictimsTitle">Daily Fatal Police Shootings in <select class="select-box" id="calendarYearSelect">
+                            <option value="2022" selected>2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                        </select></label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="align-self-center rounded-div" id="monthlyVictimsDiv">
+                        <label class="visualization-title" id="monthlyVictimsTitle">Monthly Fatal Police Shootings in <select class="select-box" id="monthlyVictimsYearSelect">
+                            <option value="2022" selected>2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                        </select></label>
+                    </div>
                 </div>
             </div>
-            <div class="col-6">
-                <div class="align-self-center" id="monthlyVictimsDiv"></div>
+            <div class="row d-flex justify-content-center rounded-div filter-group visualization" style="height: 12vh; margin-left: 10px">
+                <div style="padding-top: 10px">
+
+                </div>
+                <div class="col-4">
+                    <div class="row justify-content-center filter-title">
+                        <h4>Gender filters</h4>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn filter-btn active"
+                                data-chart="temporal" data-filterType="gender" data-filterValue="male">Male</button>
+                        <button type="button" class="btn filter-btn active"
+                                data-chart="temporal" data-filterType="gender" data-filterValue="female">Female</button>
+                        <button type="button" class="btn filter-btn active"
+                                data-chart="temporal" data-filterType="gender" data-filterValue="non-binary">Non-Binary</button>
+                        <button type="button" class="btn filter-btn active"
+                                data-chart="temporal" data-filterType="gender" data-filterValue="unknown">Unknown</button>
+
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row justify-content-center filter-title">
+                        <h4>Racial filters</h4>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="btn-group" role="group" aria-label="Filter buttons">
+                            <button type="button" class="btn filter-btn active"
+                                    data-chart="temporal" data-filterType="race" data-filterValue="White">White</button>
+                            <button type="button" class="btn filter-btn active"
+                                    data-chart="temporal" data-filterType="race" data-filterValue="Black">Black</button>
+                            <button type="button" class="btn filter-btn active"
+                                    data-chart="temporal" data-filterType="race" data-filterValue="Hispanic">Hispanic</button>
+                            <button type="button" class="btn filter-btn active"
+                                    data-chart="temporal" data-filterType="race" data-filterValue="Asian">Asian</button>
+                            <button type="button" class="btn filter-btn active"
+                                    data-chart="temporal" data-filterType="race" data-filterValue="Native American">Indigenous</button>
+                            <button type="button" class="btn filter-btn active"
+                                    data-chart="temporal" data-filterType="race" data-filterValue="Other">Other</button>
+                            <button type="button" class="btn filter-btn active"
+                                    data-chart="temporal" data-filterType="race" data-filterValue="Unknown">Unknown</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row justify-content-center filter-title">
+                        <h4>Armed Status filters</h4>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Filter buttons">
+                        <button type="button" class="btn filter-btn active"
+                                data-chart="temporal" data-filterType="armed_status" data-filterValue="armed">Armed</button>
+                        <button type="button" class="btn filter-btn active"
+                                data-chart="temporal" data-filterType="armed_status" data-filterValue="unarmed">Unarmed</button>
+                        <button type="button" class="btn filter-btn active"
+                                data-chart="temporal" data-filterType="armed_status" data-filterValue="unknown">Unknown</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -104,7 +174,7 @@
 <script src="js/monthlyVictimsLineChart.js"></script>
 <script src="js/bloodDripBarChart.js"></script>
 <script src="js/ageRangeBarVis.js"></script>
-<<script src="js/yearRaceVis.js"></script>
+<script src="js/yearRaceVis.js"></script>
 </body>
 </html>
 
