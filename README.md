@@ -1,4 +1,3 @@
-README for Police Shooting Data Visualization Project
 This project visualizes police shooting data in the United States, offering a comprehensive view of these incidents' demographic breakdown, regional distribution, and temporal trends. It leverages D3.js for dynamic and interactive visualizations.
 
 Getting Started
