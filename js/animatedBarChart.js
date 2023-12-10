@@ -15,9 +15,9 @@ class AnimatedBarChart {
     initVis() {
         let vis = this;
 
-        vis.margin = {top: 50, right: 20, bottom: 50, left: 70};
+        vis.margin = {top: 50, right: 50, bottom: 60, left: 70};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom - document.getElementById("animatedBarChartButton").offsetHeight; // Will need to offset height for title
+        vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom - document.getElementById("animatedBarChartSelect").offsetHeight; // Will need to offset height for title
 
         // Create svg
         vis.svg = d3.select("#" + vis.parentElement).append("svg")

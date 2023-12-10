@@ -64,6 +64,7 @@ p {
     background: #444; /* Dark background for contrast */
     appearance: none; /* Standardizes the appearance across browsers */
     cursor: pointer; /* Indicates that it's selectable */
+    text-align: center;
 }
 
 /* Axis Title Styles */
@@ -281,14 +282,6 @@ h1 {
 .btn-group {
     height: 62px;
 }
-
-#animatedBarChartButton {
-    background-color: #d1d3d5 !important; /* Light grey */
-    border-color: #ced4da !important; /* Slightly darker grey border */
-    color: #6c757d;
-}
-
-
 
 /* Bar Entrance Animation */
 .bar-enter {

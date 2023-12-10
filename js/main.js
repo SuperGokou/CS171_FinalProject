@@ -71,10 +71,8 @@ function initMainPage(dataArray) {
         btn.addEventListener('click', filterChart)
     });
 
-    document.getElementById('animatedBarChartButton').addEventListener('click', function() {
+    document.getElementById('animatedBarChartSelect').addEventListener('change', function() {
         animatedBarChart.updateVis();
-        document.getElementById('animatedBarChartButton').textContent =
-            "Switch to " + (animatedBarChart.displayMode == 'count' ? 'Victim Rate' : ' Victim Count');
     })
 
     // Show sections
