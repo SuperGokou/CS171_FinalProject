@@ -9,7 +9,7 @@ window.addEventListener('wheel', () => {
 
         if (sectionBottom > sectionHeight && sectionTop <= window.innerHeight) {
             currentSectionId = section.id;
-            if (currentSectionId === 'section1' || currentSectionId === 'section2') {
+            if (currentSectionId === 'section1') {
                 document.getElementById('stickyDiv').style.position = 'fixed';
                 document.getElementById('stickyDiv').style.bottom = '-40px';
             } else {

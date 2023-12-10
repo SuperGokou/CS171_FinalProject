@@ -87,49 +87,49 @@ class MonthlyVictimsLineChart {
             .x(function(d, i) { return vis.xScale(vis.monthNames[i]) + vis.xScale.bandwidth() / 2; })
             .y(function(d) { return vis.yScale(d); });
 
+        vis.legend = vis.svg.append("g")
+            .attr("class", "legend-linechart")
+            .attr("transform", `translate(${vis.width - 100}, 0)`);
+
         vis.wrangleData()
-        vis.drawLegend()
     }
 
     drawLegend() {
         let vis = this;
 
-        let legend = vis.svg.append("g")
-            .attr("class", "legend-linechart")
-            .attr("transform", `translate(${vis.width - 100}, 0)`);
+        vis.legend.selectAll("*").remove();
 
-
-        legend.append("rect")
+        vis.legend.append("rect")
             .attr("x", 0)
             .attr("y", 0)
             .attr("width", 20)
             .attr("height", 20)
             .attr("fill", "#fd3434");
 
-        legend.append("text")
+        vis.legend.append("text")
             .attr("x", 30)
             .attr("y", 15)
             .attr("fill", "#ffffff")
             .text(`${vis.selectedYear}`);
 
-        legend.append("rect")
+        vis.legend.append("rect")
             .attr("x", 0)
-            .attr("y", 30)
+            .attr("y", 29)
             .attr("width", 20)
             .attr("height", 20)
             .attr("fill", "rgb(128,40,40)");
 
-        legend.append("text")
+        vis.legend.append("text")
             .attr("x", 30)
-            .attr("y", 45)
+            .attr("y", 44)
             .attr("fill", "#ffffff")
             .text("2015-2022");
 
-        legend.append("text")
+        vis.legend.append("text")
             .attr("x", 30)
-            .attr("y", 65)
+            .attr("y", 64)
             .attr("fill", "#ffffff")
-            .text("Average");
+            .text("Mean");
     }
 
     wrangleData() {
@@ -173,6 +173,7 @@ class MonthlyVictimsLineChart {
         };
 
         vis.updateVis();
+        vis.drawLegend();
     }
 
     checkFilters(d) {

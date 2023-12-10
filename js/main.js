@@ -57,13 +57,10 @@ function initMainPage(dataArray) {
     // Draw map vis
     myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1], selectedYear, filters.temporal);
 
-    yearRaceVis = new YearRaceVis("yearRaceDiv", dataArray[1]);
+    animatedBarChart = new AnimatedBarChart('yearRaceDiv');
 
     // Draw bar chart
     let barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true);
-
-    //draw age range bar
-    myageRangeBarVis = new ageRangeBarVis('ageRangeBarDiv', dataArray[1], selectedYear, filters.temporal);
 
     // Event listener for year selection on temporal charts
     document.getElementById('calendarYearSelect').addEventListener('change', temporalChartSelect);
@@ -71,8 +68,12 @@ function initMainPage(dataArray) {
 
     // Event listener for gender / racial / armed status filters
     document.querySelectorAll('.btn-group .btn').forEach(btn => {
-       btn.addEventListener('click', filterChart)
+        btn.addEventListener('click', filterChart)
     });
+
+    document.getElementById('animatedBarChartSelect').addEventListener('change', function() {
+        animatedBarChart.updateVis();
+    })
 
     // Show sections
     showSections();
@@ -88,12 +89,10 @@ function temporalChartSelect() {
     monthlyVictimsLineChart.selectedYear = selectedYear;
     monthlyVictimsLineChart.wrangleData();
     myMapVis.redrawMavis(selectedYear, filters.temporal)
-    myageRangeBarVis.redrewAgeRangeBarVis(selectedYear, filters.temporal)
 
     // Ensure both temporal chart select boxes have the same value
     document.getElementById('calendarYearSelect').value = selectedYear;
     document.getElementById('monthlyVictimsYearSelect').value = selectedYear;
-    // myageRangeBarVis.wrangleData(selectedYear);
 }
 
 function filterChart() {
@@ -108,7 +107,6 @@ function filterChart() {
             monthlyVictimsLineChart.filters = filters.temporal;
             monthlyVictimsLineChart.wrangleData();
             myMapVis.redrawMavis(selectedYear, filters.temporal)
-            myageRangeBarVis.redrewAgeRangeBarVis(selectedYear, filters.temporal)
 
             break;
     }

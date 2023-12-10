@@ -64,6 +64,7 @@ p {
     background: #444; /* Dark background for contrast */
     appearance: none; /* Standardizes the appearance across browsers */
     cursor: pointer; /* Indicates that it's selectable */
+    text-align: center;
 }
 
 /* Axis Title Styles */
@@ -281,8 +282,6 @@ h1 {
 .btn-group {
     height: 62px;
 }
-
-
 
 /* Bar Entrance Animation */
 .bar-enter {
