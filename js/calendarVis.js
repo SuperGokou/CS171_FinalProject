@@ -107,8 +107,6 @@ class CalendarVis {
                 vis.checkFilters(d);
         });
 
-        console.log('cal-filteredData', vis.filteredData);
-
         this.displayData = []
         vis.currentDate = new Date(vis.selectedYear, 0, 1);
 

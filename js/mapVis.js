@@ -11,7 +11,7 @@ class MapVis {
     initVis() {
         let vis = this;
 
-        vis.margin = {top: 10, right: 60, bottom: 10, left: 60};
+        vis.margin = {top: 80, right: 60, bottom: 80, left: 60};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
 
@@ -19,6 +19,15 @@ class MapVis {
             .attr("width", vis.width + vis.margin.left + vis.margin.right)
             .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
+
+        // Add a title to the chart
+        vis.title = vis.svg.append("text")
+            .attr("x", vis.width / 2)
+            .attr("y", vis.margin.top / 5)
+            .attr("text-anchor", "middle")
+            .style("font-size", "18px")
+            .style("fill", "white")
+            .text(`Map for Fatal Police Shootings in ` + vis.selectedYear);
 
         // Initialize tooltip
         vis.tooltip = d3.select("body").append('div')
@@ -81,8 +90,6 @@ class MapVis {
             return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear) && vis.checkFilters(d);
         });
 
-
-        console.log('map-filteredData', vis.filteredData);
 
         // prepare covid data by grouping all rows by state
         let ShootingData = Array.from(d3.group(vis.filteredData, d => d.state), ([key, value]) => ({key, value}))
@@ -263,6 +270,7 @@ class MapVis {
         let vis = this;
         vis.selectedYear = selectedYear;
         vis.filters = filters;
+        vis.title.text("Map for Fatal Police Shootings in: " + selectedYear);
         vis.wrangleData();
     }
 

@@ -23,6 +23,14 @@ class ageRangeBarVis {
             .append("g")
             .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
+        vis.title = vis.svg.append("text")
+            .attr("x", vis.width / 2)
+            .attr("y", vis.margin.top / 5)
+            .attr("text-anchor", "middle")
+            .style("font-size", "22px")
+            .style("fill", "white")
+            .text(`Age Range for Fatal Police Shootings in ` + vis.selectedYear);
+
         vis.y = d3.scaleBand()
             .rangeRound([0, vis.height])
             .padding(0.5);
@@ -186,6 +194,8 @@ class ageRangeBarVis {
         let vis = this;
         vis.selectedYear = selectedYear;
         vis.filters = filters;
+        vis.title.text(`Age Range for Fatal Police Shootings in ` + selectedYear);
+
         vis.wrangleData();
     }
 }
