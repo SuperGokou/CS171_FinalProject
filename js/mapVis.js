@@ -387,19 +387,23 @@ class MapVis {
         let vis = this;
         vis.selectedYear = selectedYear;
         vis.filters = filters;
+        let oldMetric = vis.metric;
         vis.metric = metric;
 
-        vis.legend.select('.legend-text')
-            .transition()
-            .duration(500)
-            .style("opacity", 0)
-            .on('end', function() {
-                d3.select(this)
-                    .text(`Victims (${vis.metric == 'count' ? 'Count' : 'Per Million'})`)
-                    .transition()
-                    .duration(500)
-                    .style("opacity", 1)
-            })
+        if (oldMetric != vis.metric) {
+            vis.legend.select('.legend-text')
+                .transition()
+                .duration(500)
+                .style("opacity", 0)
+                .on('end', function() {
+                    d3.select(this)
+                        .text(`Victims (${vis.metric == 'count' ? 'Count' : 'Per Million'})`)
+                        .transition()
+                        .duration(500)
+                        .style("opacity", 1)
+                })
+        }
+
 
         vis.wrangleData();
     }

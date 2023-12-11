@@ -184,8 +184,8 @@ function filterChart() {
                 !filters.geographical[this.dataset.filtertype][this.dataset.filtervalue];
 
             console.log(filters.geographical)
-            myMapVis.redrawMapVis(geographicalChartsSelectedYear, filters.geographical)
-            dripBarChart.redrawdripbarchart(geographicalChartsSelectedYear, filters.geographical);
+            myMapVis.redrawMapVis(geographicalChartsSelectedYear, filters.geographical, geographicalChartsSelectedMetric)
+            dripBarChart.redrawdripbarchart(geographicalChartsSelectedYear, filters.geographical, geographicalChartsSelectedMetric);
             break;
     }
 }
