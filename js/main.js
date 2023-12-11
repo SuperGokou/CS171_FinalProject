@@ -138,6 +138,7 @@ function restructurePopulationData(populationData) {
 
 function temporalChartSelect() {
     // Ensure both temporal chart select boxes have the same value
+    temporalChartsSelectedYear = +this.value;
     calendarVis.redrawCalendar(temporalChartsSelectedYear, filters.temporal);
     monthlyVictimsLineChart.selectedYear = temporalChartsSelectedYear;
     monthlyVictimsLineChart.wrangleData();
