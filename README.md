@@ -27,9 +27,6 @@ Hover over elements for detailed information in tooltips.
 Data Source
 Data is sourced from a comprehensive police shooting database detailing incidents from 2015 to 2022.
 
-Contribution
-Contributions are welcome. Please fork the repository and submit a pull request for review.
-
 License
 This project is released under the MIT License. See the LICENSE file for details.
 
