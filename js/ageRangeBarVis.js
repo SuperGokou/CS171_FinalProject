@@ -55,7 +55,7 @@ class ageRangeBarVis {
     wrangleData() {
         let vis = this;
 
-        vis.selectedYear = selectedYear ? selectedYear : vis.selectedYear;
+        vis.selectedYear = temporalChartsSelectedYear ? temporalChartsSelectedYear : vis.selectedYear;
 
         let filteredData = vis.displayData.filter(d => {
             return parseInt(d.date.split('-')[0]) === parseInt(vis.selectedYear) && vis.checkFilters(d)

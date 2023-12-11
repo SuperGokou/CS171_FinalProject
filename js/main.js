@@ -1,5 +1,7 @@
 let selectedState = '';
-let selectedYear = 2022;
+let temporalChartsSelectedYear = 2022;
+let geographicalChartsSelectedYear = 0;
+let geographicalChartsSelectedMetric = 'count';
 
 let filters = {
     "temporal" : {
@@ -25,13 +27,34 @@ let filters = {
         }
     },
     "geographical" : {
+        "gender" : {
+            "male" : true,
+            "female" : true,
+            "non-binary" : true,
+            "unknown" : true
+        },
+        "race" : {
+            "Black" : true,
+            "White" : true,
+            "Hispanic" : true,
+            "Asian" : true,
+            "Native American" : true,
+            "Unknown" : true,
+            "Other" : true
+        },
+        "armed_status" : {
+            "armed" : true,
+            "unarmed" : true,
+            "unknown" : true
+        }
     }
 }
 
 let promises = [
 
     d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-albers-10m.json"),
-    d3.csv("data/shootings_data_cleaned.csv")
+    d3.csv("data/shootings_data_cleaned.csv"),
+    d3.csv("data/populations.csv")
 ];
 Promise.all(promises)
     .then(function (data) {
@@ -49,26 +72,30 @@ function initMainPage(dataArray) {
     background = new Background('names-background', dataArray[1]);
 
     // Draw calendar
-    calendarVis = new CalendarVis('calendarDiv', dataArray[1], selectedYear, filters.temporal);
+    calendarVis = new CalendarVis('calendarDiv', dataArray[1], temporalChartsSelectedYear, filters.temporal);
 
     // Draw monthly victims line chart
-    monthlyVictimsLineChart = new MonthlyVictimsLineChart('monthlyVictimsDiv', dataArray[1], selectedYear, filters.temporal);
+    monthlyVictimsLineChart = new MonthlyVictimsLineChart('monthlyVictimsDiv', dataArray[1], temporalChartsSelectedYear, filters.temporal);
 
     // Draw map vis
-    myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1], selectedYear, filters.temporal);
-
-
+    myMapVis = new MapVis('mapDiv', dataArray[0], dataArray[1], restructurePopulationData(dataArray[2]), geographicalChartsSelectedMetric, geographicalChartsSelectedYear, filters.geographical);
 
     animatedBarChart = new AnimatedBarChart('yearRaceDiv');
 
     // Draw bar chart
-    barChart = new BloodDripBarChart('barChartDiv', dataArray[1], true, selectedYear, filters.temporal);
+    dripBarChart = new BloodDripBarChart('barChartDiv', dataArray[1], restructurePopulationData(dataArray[2]), true, geographicalChartsSelectedYear, filters.geographical);
 
     // Event listener for year selection on temporal charts
     document.getElementById('calendarYearSelect').addEventListener('change', temporalChartSelect);
     document.getElementById('monthlyVictimsYearSelect').addEventListener('change', temporalChartSelect);
-    document.getElementById('mapVictimsYearSelect').addEventListener('change', temporalChartSelect);
-    document.getElementById('dripVictimsYearSelect').addEventListener('change', temporalChartSelect);
+
+    // Event listener for year selection on geographical charts
+    document.getElementById('mapVictimsYearSelect').addEventListener('change', geographicalChartYearSelect);
+    document.getElementById('dripVictimsYearSelect').addEventListener('change', geographicalChartYearSelect);
+
+    // Event listener for metric selection geographical charts
+    document.getElementById('mapVictimsMetricSelect').addEventListener('change', geographicalChartMetricSelect);
+    document.getElementById('dripVictimsMetricSelect').addEventListener('change', geographicalChartMetricSelect);
 
     // Event listener for gender / racial / armed status filters
     document.querySelectorAll('.btn-group .btn').forEach(btn => {
@@ -83,32 +110,60 @@ function initMainPage(dataArray) {
     // Show sections
     showSections();
 
-    // Lazy load video game
+    // Lazy load video game & blood drip
     lazyLoadVideoGame();
+    lazyLoadBloodDrip();
+}
+
+function restructurePopulationData(populationData) {
+    let vis = this;
+
+    let restructuredData = populationData.reduce((accumulator, current) => {
+        const state = current.State;
+        accumulator[state] = {
+            "Total" : +current.Total,
+            "Black" : +current.Black,
+            "White" : +current.White,
+            "Hispanic" : +current.Hispanic,
+            "Asian" : +current.Asian,
+            "Native American" : +current["Native American"],
+            "Other" : +current.Other,
+        };
+
+        return accumulator;
+    });
+
+    return restructuredData;
 }
 
 function temporalChartSelect() {
-
-    selectedYear = this.value === 'all' ? 0 : +this.value; // Convert 'all' to 0, otherwise use the numeric value
-    console.log(selectedYear)
-    myMapVis.redrawMavis(selectedYear, filters.temporal)
-    barChart.redrawdripbarchart(selectedYear, filters.temporal);
-
     // Ensure both temporal chart select boxes have the same value
-    if(selectedYear !== 0) {
-        calendarVis.redrawCalendar(selectedYear, filters.temporal);
-        monthlyVictimsLineChart.selectedYear = selectedYear;
-        monthlyVictimsLineChart.wrangleData();
+    calendarVis.redrawCalendar(temporalChartsSelectedYear, filters.temporal);
+    monthlyVictimsLineChart.selectedYear = temporalChartsSelectedYear;
+    monthlyVictimsLineChart.wrangleData();
 
-        document.getElementById('calendarYearSelect').value = selectedYear;
-        document.getElementById('monthlyVictimsYearSelect').value = selectedYear;
-        document.getElementById('dripvisVictimsYearSelect').value = selectedYear;
-        document.getElementById('mapvisVictimsYearSelect').value = selectedYear;
-    }else {
-        document.getElementById('dripvisVictimsYearSelect').value = selectedYear;
-        document.getElementById('mapvisVictimsYearSelect').value = selectedYear;
-    }
+    document.getElementById('calendarYearSelect').value = temporalChartsSelectedYear;
+    document.getElementById('monthlyVictimsYearSelect').value = temporalChartsSelectedYear;
+}
 
+function geographicalChartYearSelect() {
+    geographicalChartsSelectedYear = this.value === 'all' ? 0 : +this.value; // Convert 'all' to 0, otherwise use the numeric value
+    myMapVis.redrawMapVis(geographicalChartsSelectedYear, filters.geographical, geographicalChartsSelectedMetric)
+    dripBarChart.redrawdripbarchart(geographicalChartsSelectedYear, filters.geographical, geographicalChartsSelectedMetric);
+
+
+    document.getElementById('mapVictimsYearSelect').value = this.value;
+    document.getElementById('dripVictimsYearSelect').value = this.value;
+}
+
+function geographicalChartMetricSelect() {
+    geographicalChartsSelectedMetric = this.value;
+    myMapVis.redrawMapVis(geographicalChartsSelectedYear, filters.geographical, geographicalChartsSelectedMetric)
+    dripBarChart.redrawdripbarchart(geographicalChartsSelectedYear, filters.geographical, geographicalChartsSelectedMetric);
+
+
+    document.getElementById('mapVictimsMetricSelect').value = this.value;
+    document.getElementById('dripVictimsMetricSelect').value = this.value;
 }
 
 function filterChart() {
@@ -119,12 +174,18 @@ function filterChart() {
                 !filters.temporal[this.dataset.filtertype][this.dataset.filtervalue];
 
             console.log(filters.temporal)
-            calendarVis.redrawCalendar(selectedYear, filters.temporal);
+            calendarVis.redrawCalendar(temporalChartsSelectedYear, filters.temporal);
             monthlyVictimsLineChart.filters = filters.temporal;
             monthlyVictimsLineChart.wrangleData();
-            myMapVis.redrawMavis(selectedYear, filters.temporal)
-            barChart.redrawdripbarchart(selectedYear, filters.temporal);
 
+            break;
+        case 'geographical':
+            filters.geographical[this.dataset.filtertype][this.dataset.filtervalue] =
+                !filters.geographical[this.dataset.filtertype][this.dataset.filtervalue];
+
+            console.log(filters.geographical)
+            myMapVis.redrawMapVis(geographicalChartsSelectedYear, filters.geographical)
+            dripBarChart.redrawdripbarchart(geographicalChartsSelectedYear, filters.geographical);
             break;
     }
 }
@@ -166,6 +227,30 @@ function lazyLoadVideoGame() {
     } else {
         // Document is already loaded, observe immediately
         observer.observe(gameDiv);
-        console.log('HIII')
+    }
+}
+
+function lazyLoadBloodDrip() {
+    let dripping = false;
+
+    let observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            console.log('hello?')
+            if (entry.isIntersecting && !dripping) {
+                dripping = true;
+                dripBarChart.redrawdripbarchart(0, filters.geographical);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: [0.5] });
+
+    let dripChartDiv = document.getElementById('section1');
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            observer.observe(dripChartDiv);
+        });
+    } else {
+        observer.observe(dripChartDiv);
     }
 }

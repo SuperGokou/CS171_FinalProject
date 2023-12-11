@@ -1,23 +1,33 @@
 class MapVis {
-    constructor(parentElement, geoData, usaShootingData, selectedYear, filters) {
+    constructor(parentElement, geoData, usaShootingData, populationData, metric, selectedYear, filters) {
         this.parentElement = parentElement;
         this.usaShootingData = usaShootingData;
+        this.populationData = populationData;
         this.selectedYear = selectedYear;
         this.geoData = geoData;
         this.filters = filters;
+        this.metric = metric;
+
+        this.stateAbbreviations = [
+            'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL',
+            'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE',
+            'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN',
+            'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY', 'DC'
+        ]
+
         this.initVis();
     }
 
     initVis() {
         let vis = this;
 
-        vis.margin = {top: 60, right: 20, bottom: 60, left: 20};
+        vis.margin = {top: 60, right: 20, bottom: 100, left: 100};
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
+        vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom - document.getElementById("dripVisVictimsTitle").offsetHeight;
 
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
             .attr("width", vis.width + vis.margin.left + vis.margin.right)
-            .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+            .attr("height", vis.height + vis.margin.top + vis.margin.bottom + document.getElementById("dripVisVictimsTitle").offsetHeight)
             .attr('transform', `translate (${vis.margin.left}, ${vis.margin.top})`);
 
         // Initialize tooltip
@@ -28,7 +38,7 @@ class MapVis {
         vis.path = d3.geoPath();
 
         vis.viewpoint = {'width': 975, 'height': 610};
-        vis.zoom = vis.width / vis.viewpoint.width;
+        vis.zoom = 0.55//vis.width / vis.viewpoint.width;
 
         vis.map = vis.svg.append("g")
             .attr("class", "states")
@@ -46,11 +56,10 @@ class MapVis {
 
         vis.legend = vis.svg.append("g")
             .attr("class", "legendLinear")
-            .attr("transform", `translate(${vis.width/2},${vis.height *0.9})`);
+            .attr("transform", `translate(${vis.width * 0.6},${vis.height})`);
 
         vis.legendScale = d3.scaleLinear()
             .range([0, vis.width/3]) ;
-        //.domain([0, 827000]);
 
         // Define the color for the legend's gradient
         vis.legendColor = d3.scaleSequential()
@@ -70,6 +79,17 @@ class MapVis {
             .enter().append("stop")
             .attr("offset", d => d.offset)
             .attr("stop-color", d => d.color);
+
+        vis.legend
+            .append('text')
+            .attr('class', 'legend-text')
+            .attr('x', vis.width/6)
+            .attr('y', +50)
+            .attr('fill', 'white')
+            .attr('text-anchor', 'middle')
+            .text(`Victims (${vis.metric == 'count' ? 'Count' : 'Per Million'})`);
+
+        console.log(vis.metric)
 
         vis.wrangleData();
     }
@@ -94,7 +114,7 @@ class MapVis {
         // merge
         vis.ShootingData.forEach(state => {
             // init counters
-            let CasesSum = 0;
+            let TotalSum = 0;
             let blackSum = 0;
             let whiteSum = 0;
             let asianSum = 0;
@@ -104,7 +124,7 @@ class MapVis {
 
             // calculate new cases by summing up all the entries for each state
             state.value.forEach(value => {
-                CasesSum += 1;
+                TotalSum += 1;
                 if (value.race === "Black"){
                     blackSum += 1;
                 } else if (value.race === "White"){
@@ -120,28 +140,78 @@ class MapVis {
                 }
             });
 
+            // Needed for metric display
+            vis.relevantPopulationsByState = vis.getRelevantPopulations();
+
             // populate the final data structure
             vis.stateInfo.push(
                 {
                     state: nameConverter.getFullName(state.key),
                     year: vis.selectedYear,
-                    CaseSum: CasesSum,
+                    TotalSum: TotalSum,
                     blackSum: blackSum,
                     whiteSum: whiteSum,
                     asianSum: asianSum,
                     hispanicSum: hispanicSum,
                     nativeAmericanSum: nativeAmericanSum,
-                    otherRaceSum: otherRaceSum
+                    otherRaceSum: otherRaceSum,
+                    RateSum: TotalSum / vis.relevantPopulationsByState[state.key] * 10**6,
+                    TotalRate: TotalSum / this.populationData[state.key].Total * 10**6,
+                    blackRate: blackSum / this.populationData[state.key].Black * 10**6,
+                    whiteRate: whiteSum / this.populationData[state.key].White * 10**6,
+                    asianRate: asianSum / this.populationData[state.key].Asian * 10**6,
+                    hispanicRate: hispanicSum / this.populationData[state.key].Hispanic * 10**6,
+                    nativeAmericanRate: nativeAmericanSum / this.populationData[state.key]["Native American"] * 10**6,
+                    otherRaceRate: otherRaceSum / this.populationData[state.key].Other * 10**6
                 }
             )
         })
 
-        // console.log('final data structure for mapVis', vis.stateInfo);
-
-        vis.colorScale.domain([0, d3.max(vis.stateInfo, d => d.year === vis.selectedYear ? d.CaseSum : 0)]);
-        vis.legendScale.domain([0, d3.max(vis.stateInfo, d => d.year === vis.selectedYear ? d.CaseSum : 0)]);
+        if (vis.metric == 'count') {
+            vis.colorScale.domain([0, d3.max(vis.stateInfo, d => d.year === vis.selectedYear ? d.TotalSum : 0)]);
+            vis.legendScale.domain([0, d3.max(vis.stateInfo, d => d.year === vis.selectedYear ? d.TotalSum : 0)]);
+        } else {
+            vis.colorScale.domain([0, d3.max(vis.stateInfo, d => d.year === vis.selectedYear ? d.RateSum : 0)]);
+            vis.legendScale.domain([0, d3.max(vis.stateInfo, d => d.year === vis.selectedYear ? d.RateSum : 0)]);
+        }
 
         vis.updateVis();
+    }
+
+    getRelevantPopulations() {
+        let vis = this;
+
+        let displayedRaces = [];
+        // We can only divide per capita by filtered races if unknown filter is off
+        let divisible = true;
+        for (const filter in vis.filters['race']) {
+            if (vis.filters['race'][filter]) {
+                if (filter === "Unknown") {
+                    divisible = false;
+                } else {
+                    displayedRaces.push(filter);
+                }
+            }
+        }
+
+        let relevantPopulations = {}
+        if (divisible) {
+            vis.stateAbbreviations.forEach(state => {
+                relevantPopulations[state] = 0;
+                displayedRaces.forEach(race => {
+                    if (!vis.populationData[state][race]) {
+                        console.log(state, race)
+                    }
+                    relevantPopulations[state] += vis.populationData[state][race]
+                });
+            })
+        } else {
+            vis.stateAbbreviations.forEach(state => {
+                relevantPopulations[state] = vis.populationData[state]['Total'];
+            })
+        }
+
+        return relevantPopulations;
     }
 
     checkFilters(d) {
@@ -205,7 +275,7 @@ class MapVis {
             .attr("fill", d => {
                 let stateInfo = stateColorMap.get(d.properties.name);
                 // console.log("=======>", d);
-                return stateInfo ? vis.colorScale(stateInfo.CaseSum) : "#FFF";
+                return stateInfo ? vis.colorScale(vis.metric == 'count' ? stateInfo.TotalSum : stateInfo.RateSum) : "#FFF";
             })
             .attr('stroke-width', '1.5px')
             .attr('stroke', 'black');
@@ -252,8 +322,8 @@ class MapVis {
                                 <tbody>
                                     <tr>
                                         <th>Total</th>
-                                        <td>${stateInfo.CaseSum}</td>
-                                        <td>${vis.formatRate(stateInfo.rateSum)}</td>
+                                        <td>${stateInfo.TotalSum}</td>
+                                        <td>${vis.formatRate(stateInfo.TotalRate)}</td>
                                     </tr>
                                     <tr>
                                         <th>Black</th>
@@ -299,7 +369,7 @@ class MapVis {
                     .attr('stroke-width', 0.5)
                     .attr("fill", d => {
                         let stateInfo = stateColorMap.get(d.properties.name);
-                        return stateInfo ? vis.colorScale(stateInfo.CaseSum) : "#FFF";
+                        return stateInfo ? vis.colorScale(vis.metric == 'count' ? stateInfo.TotalSum : stateInfo.RateSum) : "#FFF";
                     });
                 vis.tooltip
                     .style("opacity", 0)
@@ -310,13 +380,26 @@ class MapVis {
     }
 
     formatRate(rate) {
-        return rate ? rate.toFixed(2) + "per million" : "N/A";
+        return rate ? rate.toFixed(2) + " per Million" : "N/A";
     }
-    redrawMavis(selectedYear, filters) {
+    redrawMapVis(selectedYear, filters, metric) {
         let vis = this;
         vis.selectedYear = selectedYear;
         vis.filters = filters;
-        // vis.title.text("Map for Fatal Police Shootings in: " + selectedYear);
+        vis.metric = metric;
+
+        vis.legend.select('.legend-text')
+            .transition()
+            .duration(500)
+            .style("opacity", 0)
+            .on('end', function() {
+                d3.select(this)
+                    .text(`Victims (${vis.metric == 'count' ? 'Count' : 'Per Million'})`)
+                    .transition()
+                    .duration(500)
+                    .style("opacity", 1)
+            })
+
         vis.wrangleData();
     }
 

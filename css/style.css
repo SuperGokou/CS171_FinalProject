@@ -32,6 +32,12 @@ p {
     color: #fff; /* Color set for consistency */
 }
 
+.x-axis, .states {
+    font-size: 0.6em; /* Slightly larger for readability */
+    font-weight: bold;
+    color: #fff; /* Color set for consistency */
+}
+
 /* Names Background Styles */
 #names-background {
     position: fixed;
@@ -73,6 +79,13 @@ p {
     font-size: 16px; /* Slightly larger for readability */
     font-family: 'Merriweather'; /* Modern font-family */
 }
+
+.legend-text {
+    fill: #ffffff;
+    font-size: 14px; /* Slightly larger for readability */
+    font-family: 'Merriweather'; /* Modern font-family */
+}
+
 
 /* Axis Path and Line Styles */
 .x-axis path, .y-axis path, .x-axis line, .y-axis line {
