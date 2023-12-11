@@ -329,32 +329,32 @@ class MapVis {
                                     <tr>
                                         <th>Black</th>
                                         <td>${stateInfo.blackSum}</td>
-                                        <td>${vis.formatRate(stateInfo.blackSum/stateInfo.CaseSum)}</td>
+                                        <td>${vis.formatRate(stateInfo.blackSum/stateInfo.TotalSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>Hispanic</th>
                                         <td>${stateInfo.hispanicSum}</td>
-                                        <td>${vis.formatRate(stateInfo.hispanicSum/stateInfo.CaseSum)}</td>
+                                        <td>${vis.formatRate(stateInfo.hispanicSum/stateInfo.TotalSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>White</th>
                                         <td>${stateInfo.whiteSum}</td>
-                                        <td>${vis.formatRate(stateInfo.whiteSum/stateInfo.CaseSum)}</td>
+                                        <td>${vis.formatRate(stateInfo.whiteSum/stateInfo.TotalSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>Asian</th>
                                         <td>${stateInfo.asianSum}</td>
-                                        <td>${vis.formatRate(stateInfo.asianSum/stateInfo.CaseSum)}</td>
+                                        <td>${vis.formatRate(stateInfo.asianSum/stateInfo.TotalSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>Indigenous</th>
                                         <td>${stateInfo.nativeAmericanSum}</td>
-                                        <td>${vis.formatRate(stateInfo.nativeAmericanSum/stateInfo.CaseSum)}</td>
+                                        <td>${vis.formatRate(stateInfo.nativeAmericanSum/stateInfo.TotalSum)}</td>
                                     </tr>
                                     <tr>
                                         <th>Other</th>
                                         <td>${stateInfo.otherRaceSum}</td>
-                                        <td>${vis.formatRate(stateInfo.otherRaceSum/stateInfo.CaseSum)}</td>
+                                        <td>${vis.formatRate(stateInfo.otherRaceSum/stateInfo.TotalSum)}</td>
                                     </tr>
                                 </tbody>
                             </table>
